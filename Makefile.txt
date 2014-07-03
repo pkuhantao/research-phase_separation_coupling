@@ -1,0 +1,38 @@
+CXX = g++
+CXXFLAGS = -g -Wall -O3 -std=c++11 -fopenmp
+LFLAGS_OMP = -fopenmp
+LIBS = -lm 
+
+# phase separation, where chemical potential is calculated by double-well potential
+PHASE_SEPARATION = PhaseSeparation_solv
+PS_OBJS = PhaseSeparation_solv.o NormalGrids.o NormalGrids3D.o GhostBC.o GhostFrame.o GhostFrame3D.o Center.o InnerSolvPatch.o InnerSolv.o util_funcs.o
+
+## simple diffusion, where chemical potential is equal to order parameter
+SIMPLE_DIFFUSION = SimpleDiff_solv 
+SD_OBJS = SimpleDiff_solv.o NormalGrids.o NormalGrids3D.o GhostBC.o GhostFrame.o GhostFrame3D.o Center.o InnerSolvPatch.o InnerSolv.o util_funcs.o
+
+
+all: $(PHASE_SEPARATION) $(SIMPLE_DIFFUSION)
+
+$(PHASE_SEPARATION) : $(PS_OBJS)
+	$(CXX) $(LFLAGS_OMP) -o $@ $^ $(LIBS)
+
+$(PS_OBJS) : 
+	$(CXX) -c $(PS_OBJS:.o=.cpp)
+
+
+$(SIMPLE_DIFFUSION) : $(SD_OBJS)
+	$(CXX) $(LFLAGS_OMP) -o $@ $^ $(LIBS)
+
+$(SD_OBJS) : 
+	$(CXX) -c $(SD_OBJS:.o=.cpp)
+
+
+clean:
+	$(RM) *.o *~
+	$(RM) .depend
+
+depend:
+	$(CXX) -MM $(CXXFLAGS) *.cpp > .depend
+
+-include .depend
