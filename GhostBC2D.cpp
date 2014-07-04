@@ -1,20 +1,20 @@
 //
-//  GhostBC.cpp
+//  GhostBC2D.cpp
 //  
 //
 //  Created by Tao Han on 4/12/14.
 //
 //
 
-#include "GhostBC.h"
-#include "NormalGrids.h"
+#include "GhostBC2D.h"
+#include "NormalGrids2D.h"
 
 #include <cmath>
 #include <cassert>
 #include <utility>
 #include <vector>
 
-GhostBC::GhostBC(const vector<double> &theta, const vector<double> &phi, const NormalGrids &oppoGrids) {
+GhostBC2D::GhostBC2D(const vector<double> &theta, const vector<double> &phi, const NormalGrids2D &oppoGrids) {
     const int N = theta.size();
     angles.resize(N, pair<double, double>());
     anglesPrim.resize(N, pair<double, double>());
@@ -34,7 +34,7 @@ GhostBC::GhostBC(const vector<double> &theta, const vector<double> &phi, const N
 }
 
 // calcualte theta', phi' in complemental coordinate
-void GhostBC::coordiTrans() {
+void GhostBC2D::coordiTrans() {
     for (int i = 0; i < angles.size(); i++) {
         double theta = angles[i].first;
         double phi = angles[i].second;
@@ -51,7 +51,7 @@ void GhostBC::coordiTrans() {
 }
 
 // from given complemental normal grids, find neighbors for interpolation
-void GhostBC::findNbs(const NormalGrids &grids) {
+void GhostBC2D::findNbs(const NormalGrids2D &grids) {
     for (int i = 0; i < anglesPrim.size(); i++) {
         double thetaPrim = anglesPrim[i].first;
         double phiPrim = anglesPrim[i].second;
@@ -66,7 +66,7 @@ void GhostBC::findNbs(const NormalGrids &grids) {
 }
 
 // from the neighbors' position, calculate interpolation weights
-void GhostBC::calWts(const NormalGrids &grids) {
+void GhostBC2D::calWts(const NormalGrids2D &grids) {
     for (int i = 0; i < weights.size(); i++) {
         double thetaPrim = anglesPrim[i].first;
         double phiPrim = anglesPrim[i].second;
@@ -84,7 +84,7 @@ void GhostBC::calWts(const NormalGrids &grids) {
 }
 
 // given f, interpolate f0
-void GhostBC::interpolation(vector<double> &f0, const vector<vector<double> > &f) {
+void GhostBC2D::interpolation(vector<double> &f0, const vector<vector<double> > &f) {
     assert(f0.size() == weights.size());
     for (int i = 0; i < f0.size(); i++) {
         f0[i] = 0;

@@ -10,8 +10,8 @@
 #define ____GhostFrame3D__
 
 
-#include "GhostFrame.h"
-#include "NormalGrids.h"
+#include "GhostFrame2D.h"
+#include "NormalGrids2D.h"
 #include "NormalGrids3D.h"
 
 #include <iostream>
@@ -21,7 +21,7 @@ using namespace std;
 
 class GhostFrame3D {
 public:
-    GhostFrame3D(const NormalGrids3D &currGrids3D, const NormalGrids &currGrids2D, const NormalGrids &oppoGrids2D); // given 2D and 3D grids, construct 3D ghost frame
+    GhostFrame3D(const NormalGrids3D &currGrids3D, const NormalGrids2D &currGrids2D, const NormalGrids2D &oppoGrids2D); // given 2D and 3D grids, construct 3D ghost frame
     ~GhostFrame3D();
     
     // given the bulk value in both its own grids and the opposite grids, interpolate the value in all ghost cells
@@ -37,7 +37,7 @@ private:
     // Note: here we interpolate the value from the in-plane cell, we don't consider the cells which are above or below the current plane
     void interpIntern(const vector<vector<vector<double> > > &f1);
     
-    GhostFrame *ghost2D; // 2d internal ghost frame
+    GhostFrame2D *ghost2D; // 2d internal ghost frame
 
 };
 

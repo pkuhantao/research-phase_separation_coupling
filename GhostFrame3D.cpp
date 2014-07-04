@@ -7,8 +7,8 @@
 //
 
 #include "GhostFrame3D.h"
-#include "GhostFrame.h"
-#include "NormalGrids.h"
+#include "GhostFrame2D.h"
+#include "NormalGrids2D.h"
 #include "NormalGrids3D.h"
 
 #include <vector>
@@ -16,9 +16,9 @@
 using namespace std;
 
 // given 2D and 3D grids, construct 3D ghost frame
-GhostFrame3D::GhostFrame3D(const NormalGrids3D &currGrids3D, const NormalGrids &currGrids2D, const NormalGrids &oppoGrids2D) {
+GhostFrame3D::GhostFrame3D(const NormalGrids3D &currGrids3D, const NormalGrids2D &currGrids2D, const NormalGrids2D &oppoGrids2D) {
     // construct 2D ghost frame, used for internal ghost boundary interpolation
-    ghost2D = new GhostFrame(currGrids2D, oppoGrids2D);
+    ghost2D = new GhostFrame2D(currGrids2D, oppoGrids2D);
     // create ghost boundaries
     const int Nr = currGrids3D.sizeInR();
     const int Ntheta = currGrids3D.sizeInTheta();

@@ -1,13 +1,13 @@
 //
-//  NormalGrids.h
+//  NormalGrids2D.h
 //  
 //
 //  Created by Tao Han on 4/12/14.
 //
 //
 
-#ifndef ____NormalGrids__
-#define ____NormalGrids__
+#ifndef ____NormalGrids2D__
+#define ____NormalGrids2D__
 
 #include <iostream>
 #include <vector>
@@ -17,11 +17,11 @@
 
 using namespace std;
 
-class NormalGrids {
+class NormalGrids2D {
 public:
     // pass in number of cells in theta and phi direction
-    NormalGrids(int NTheta, int NPhi, double r);
-    ~NormalGrids(){};
+    NormalGrids2D(int NTheta, int NPhi, double r);
+    ~NormalGrids2D(){};
     int sizeInTheta() const {return thetaVal.size();}; // number of points on theta axis
     int sizeInPhi() const {return phiVal.size();}; // number of points on phi axis
     double dTHETA() const {return dTheta;};
@@ -55,4 +55,4 @@ private:
 };
 
 
-#endif /* defined(____NormalGrids__) */
+#endif /* defined(____NormalGrids2D__) */

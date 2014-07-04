@@ -7,8 +7,8 @@
 //
 
 #include "Membrane.h"
-#include "NormalGrids.h"
-#include "GhostFrame.h"
+#include "NormalGrids2D.h"
+#include "GhostFrame2D.h"
 
 #include <vector>
 #include <time.h>
@@ -17,7 +17,7 @@
 
 using namespace std;
 
-Membrane::Membrane(double M, double dt, NormalGrids *grids, GhostFrame *frame) {
+Membrane::Membrane(double M, double dt, NormalGrids2D *grids, GhostFrame2D *frame) {
     this->M = M;
     this->dt = dt;
     normGrids = grids;

@@ -9,8 +9,8 @@
 #ifndef ____Membrane__
 #define ____Membrane__
 
-#include "NormalGrids.h"
-#include "GhostFrame.h"
+#include "NormalGrids2D.h"
+#include "GhostFrame2D.h"
 
 #include <vector>
 #include <iostream>
@@ -19,7 +19,7 @@ using namespace std;
 
 class Membrane {
 public:
-    Membrane(double M, double dt, NormalGrids *grids, GhostFrame *frame);
+    Membrane(double M, double dt, NormalGrids2D *grids, GhostFrame2D *frame);
     ~Membrane(){};
     void initGauRand(double ave, double std); // initialize order parameter by Gaussian Distribution
     void initDisk(int ic, int jc, int rad); // initialize order parameter by disk(+1) surrounded by -1
@@ -38,8 +38,8 @@ private:
     static const double b = 1.0;
     double M; // diffusivity
     double dt; // time step
-    NormalGrids *normGrids; // normal grids
-    GhostFrame *ghostFm; // ghost frame
+    NormalGrids2D *normGrids; // normal grids
+    GhostFrame2D *ghostFm; // ghost frame
     vector<double> psi_the_lo, psi_the_hi, psi_phi_lo, psi_phi_hi; // ghost cells for order parameter
     vector<double> mu_the_lo, mu_the_hi, mu_phi_lo, mu_phi_hi; // ghost cells for chemical potential
 };

@@ -7,7 +7,7 @@
 //
 
 #include "InnerSolvPatch.h"
-#include "NormalGrids.h"
+#include "NormalGrids2D.h"
 #include "NormalGrids3D.h"
 #include "GhostFrame3D.h"
 #include "Properties.h"
@@ -20,7 +20,7 @@
 
 using namespace std;
 
-InnerSolvPatch::InnerSolvPatch(double dt, SolvProp solvProp, NormalGrids3D *cur3D, NormalGrids *cur2D, NormalGrids *opp2D) {
+InnerSolvPatch::InnerSolvPatch(double dt, SolvProp solvProp, NormalGrids3D *cur3D, NormalGrids2D *cur2D, NormalGrids2D *opp2D) {
     props = solvProp;
     this->dt = dt;
     // copy 3D grids

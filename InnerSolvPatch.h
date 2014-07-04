@@ -12,7 +12,7 @@
 #define ____InnerSolvPatch__
 
 
-#include "NormalGrids.h"
+#include "NormalGrids2D.h"
 #include "NormalGrids3D.h"
 #include "GhostFrame3D.h"
 #include "Properties.h"
@@ -23,7 +23,7 @@ using namespace std;
 
 class InnerSolvPatch {
 public:
-    InnerSolvPatch(double dt, SolvProp solvProp, NormalGrids3D *cur3D, NormalGrids *cur2D, NormalGrids *opp2D);
+    InnerSolvPatch(double dt, SolvProp solvProp, NormalGrids3D *cur3D, NormalGrids2D *cur2D, NormalGrids2D *opp2D);
     ~InnerSolvPatch();
     
     void interpPsi(const vector<vector<vector<double> > > &oppPsi); // given psi in opposite grids, interpolate the ghost cells for psi in current grids

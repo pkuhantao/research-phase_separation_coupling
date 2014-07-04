@@ -10,7 +10,7 @@
 #include "InnerSolv.h"
 #include "InnerSolvPatch.h"
 #include "Center.h"
-#include "NormalGrids.h"
+#include "NormalGrids2D.h"
 #include "NormalGrids3D.h"
 
 
@@ -79,7 +79,7 @@ void printMergeSolvState(const InnerSolv &inSolv, int stepnum, string foldername
 
 
 //print out memb order parameter
-void printMembState(const vector<vector<double> > &psi, const NormalGrids &grids, int YinYangID, int stepnum, string foldername) {
+void printMembState(const vector<vector<double> > &psi, const NormalGrids2D &grids, int YinYangID, int stepnum, string foldername) {
     ostringstream oss;
 	oss << foldername << "/memb_" << (YinYangID==0 ? "Yin" : "Yang") << "_psi_" << stepnum << ".dat";
 	
@@ -111,7 +111,7 @@ void printMembState(const vector<vector<double> > &psi, const NormalGrids &grids
 
 
 // print out the whole membrane in (x, y, z) of Yin grids
-void printMergeMembState(const vector<vector<double> > &psi_Yin, const NormalGrids &grids_Yin, const vector<vector<double> > &psi_Yang, const NormalGrids &grids_Yang, int stepnum, string foldername) {
+void printMergeMembState(const vector<vector<double> > &psi_Yin, const NormalGrids2D &grids_Yin, const vector<vector<double> > &psi_Yang, const NormalGrids2D &grids_Yang, int stepnum, string foldername) {
     ostringstream oss;
 	oss << foldername << "/memb_YinYang_psi_" << stepnum << ".dat";
 	

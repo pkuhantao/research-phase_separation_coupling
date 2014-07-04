@@ -1,18 +1,18 @@
 //
-//  NormalGrids.cpp
+//  NormalGrids2D.cpp
 //  
 //
 //  Created by Tao Han on 4/12/14.
 //
 //
 
-#include "NormalGrids.h"
+#include "NormalGrids2D.h"
 #include <cassert>
 #include <cmath>
 #include <iostream>
 
 // constructor
-NormalGrids::NormalGrids(int NTheta, int NPhi, double r) {
+NormalGrids2D::NormalGrids2D(int NTheta, int NPhi, double r) {
     // step
     dTheta = (thetaMax-thetaMin) / NTheta;
     dPhi = (phiMax-phiMin) / NPhi;
@@ -49,58 +49,58 @@ NormalGrids::NormalGrids(int NTheta, int NPhi, double r) {
     }
 }
 
-double NormalGrids::theta(int i) const {
+double NormalGrids2D::theta(int i) const {
     assert(i >= 0 && i < (int)thetaVal.size());
     return thetaVal[i];
 }
 
 
-double NormalGrids::phi(int i) const {
+double NormalGrids2D::phi(int i) const {
     assert(i >= 0 && i < (int)phiVal.size());
     return phiVal[i];
 }
 
-double NormalGrids::x(int i, int j) const {
+double NormalGrids2D::x(int i, int j) const {
     assert(i >= 0 && i < (int)thetaVal.size());
     assert(j >= 0 && j < (int)phiVal.size());
     return x0[i][j];
 }
 
-double NormalGrids::y(int i, int j) const {
+double NormalGrids2D::y(int i, int j) const {
     assert(i >= 0 && i < (int)thetaVal.size());
     assert(j >= 0 && j < (int)phiVal.size());
     return y0[i][j];
 }
 
-double NormalGrids::z(int i, int j) const {
+double NormalGrids2D::z(int i, int j) const {
     assert(i >= 0 && i < (int)thetaVal.size());
     assert(j >= 0 && j < (int)phiVal.size());
     return z0[i][j];
 }
 
-double NormalGrids::xprime(int i, int j) const {
+double NormalGrids2D::xprime(int i, int j) const {
     assert(i >= 0 && i < (int)thetaVal.size());
     assert(j >= 0 && j < (int)phiVal.size());
     return x1[i][j];
 }
 
-double NormalGrids::yprime(int i, int j) const {
+double NormalGrids2D::yprime(int i, int j) const {
     assert(i >= 0 && i < (int)thetaVal.size());
     assert(j >= 0 && j < (int)phiVal.size());
     return y1[i][j];
 }
 
-double NormalGrids::zprime(int i, int j) const {
+double NormalGrids2D::zprime(int i, int j) const {
     assert(i >= 0 && i < (int)thetaVal.size());
     assert(j >= 0 && j < (int)phiVal.size());
     return z1[i][j];
 }
 
 
-int NormalGrids::thetaToIndex(double angle) const {
+int NormalGrids2D::thetaToIndex(double angle) const {
     return (int)floor((angle-thetaMin)/dTheta);
 }
 
-int NormalGrids::phiToIndex(double angle) const {
+int NormalGrids2D::phiToIndex(double angle) const {
     return (int)floor((angle-phiMin)/dPhi);
 }

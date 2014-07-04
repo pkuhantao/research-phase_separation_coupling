@@ -5,11 +5,11 @@ LIBS = -lm
 
 # phase separation, where chemical potential is calculated by double-well potential
 PHASE_SEPARATION = PhaseSeparation_solv
-PS_OBJS = PhaseSeparation_solv.o NormalGrids.o NormalGrids3D.o GhostBC.o GhostFrame.o GhostFrame3D.o Center.o InnerSolvPatch.o InnerSolv.o util_funcs.o
+PS_OBJS = PhaseSeparation_solv.o NormalGrids2D.o NormalGrids3D.o GhostBC2D.o GhostFrame2D.o GhostFrame3D.o Center.o InnerSolvPatch.o InnerSolv.o util_funcs.o
 
 ## simple diffusion, where chemical potential is equal to order parameter
 SIMPLE_DIFFUSION = SimpleDiff_solv 
-SD_OBJS = SimpleDiff_solv.o NormalGrids.o NormalGrids3D.o GhostBC.o GhostFrame.o GhostFrame3D.o Center.o InnerSolvPatch.o InnerSolv.o util_funcs.o
+SD_OBJS = SimpleDiff_solv.o NormalGrids2D.o NormalGrids3D.o GhostBC2D.o GhostFrame2D.o GhostFrame3D.o Center.o InnerSolvPatch.o InnerSolv.o util_funcs.o
 
 
 all: $(PHASE_SEPARATION) $(SIMPLE_DIFFUSION)

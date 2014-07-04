@@ -10,7 +10,7 @@
 #define ____InnerSolv__
 
 
-#include "NormalGrids.h"
+#include "NormalGrids2D.h"
 #include "NormalGrids3D.h"
 #include "Properties.h"
 #include "Center.h"
@@ -37,7 +37,7 @@ private:
     
     InnerSolvPatch *Yin, *Yang; // Yin, Yang patches
     Center *ct; // center
-    NormalGrids *Yin2D, *Yang2D; // 2D grids for Yin and Yang
+    NormalGrids2D *Yin2D, *Yang2D; // 2D grids for Yin and Yang
     NormalGrids3D *Yin3D, *Yang3D; // 3D grids for Yin and Yang
 };
 

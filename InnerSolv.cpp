@@ -7,7 +7,7 @@
 //
 
 #include "InnerSolv.h"
-#include "NormalGrids.h"
+#include "NormalGrids2D.h"
 #include "NormalGrids3D.h"
 #include "Properties.h"
 #include "Center.h"
@@ -27,8 +27,8 @@ InnerSolv::InnerSolv(double dt) {
     const int n1 = 5;
     const int n2 = 20;
     const int n3 = 24;
-    Yin2D = new NormalGrids(n2, n3, ro);
-    Yang2D = new NormalGrids(n2, n3, ro);
+    Yin2D = new NormalGrids2D(n2, n3, ro);
+    Yang2D = new NormalGrids2D(n2, n3, ro);
     Yin3D = new NormalGrids3D(ro, n1, n2, n3);
     Yang3D = new NormalGrids3D(ro, n1, n2, n3);
     Yin = new InnerSolvPatch(dt, props, Yin3D, Yin2D, Yang2D);
