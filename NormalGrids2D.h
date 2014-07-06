@@ -6,6 +6,9 @@
 //
 //
 
+// normal grids for the 2D Yin/Yang patch
+
+
 #ifndef ____NormalGrids2D__
 #define ____NormalGrids2D__
 

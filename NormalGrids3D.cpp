@@ -9,20 +9,20 @@
 #include "NormalGrids3D.h"
 #include <cassert>
 #include <cmath>
-#include <iostream>
 
 // constructor
-NormalGrids3D::NormalGrids3D(double ro, int NR, int NTheta, int NPhi) {
-    ro_ = ro; // outer radius limit
-    // step
-    dR = ro_ / NR;
+NormalGrids3D::NormalGrids3D(double ro, double ri, int NR, int NTheta, int NPhi) {
+    ro_ = ro; // outer radius
+    ri_ = ri; // inner radius
+    // steps
+    dR = (ro_-ri_) / NR;
     dTheta = (thetaMax-thetaMin) / NTheta;
     dPhi = (phiMax-phiMin) / NPhi;
-    // vector
-    rVal.resize(NR, 0);
+    // (r, theta, phi)
+    rVal.resize(NR+1, 0);
     thetaVal.resize(NTheta+1, 0);
     phiVal.resize(NPhi+1, 0);
-    for (int i = 0; i < NR; i++) rVal[i] = dR + i*dR;
+    for (int i = 0; i <= NR; i++) rVal[i] = ri_ + i*dR;
     for (int i = 0; i <= NTheta; i++) thetaVal[i] = thetaMin + i*dTheta;
     for (int i = 0; i <= NPhi; i++) phiVal[i] = phiMin + i*dPhi;
     
@@ -60,23 +60,25 @@ NormalGrids3D::NormalGrids3D(double ro, int NR, int NTheta, int NPhi) {
     }
 }
 
-
+// r
 double NormalGrids3D::rad(int k) const {
     assert(k >= 0 && k < (int)rVal.size());
     return rVal[k];
 }
 
+// theta
 double NormalGrids3D::theta(int i) const {
     assert(i >= 0 && i < (int)thetaVal.size());
     return thetaVal[i];
 }
 
-double NormalGrids3D::phi(int i) const {
-    assert(i >= 0 && i < (int)phiVal.size());
-    return phiVal[i];
+// phi
+double NormalGrids3D::phi(int j) const {
+    assert(j >= 0 && j < (int)phiVal.size());
+    return phiVal[j];
 }
 
-
+// x
 double NormalGrids3D::x(int k, int i, int j) const {
     assert(k >= 0 && k < (int)rVal.size());
     assert(i >= 0 && i < (int)thetaVal.size());
@@ -84,6 +86,7 @@ double NormalGrids3D::x(int k, int i, int j) const {
     return x0[k][i][j];
 }
 
+// y
 double NormalGrids3D::y(int k, int i, int j) const {
     assert(k >= 0 && k < (int)rVal.size());
     assert(i >= 0 && i < (int)thetaVal.size());
@@ -91,6 +94,7 @@ double NormalGrids3D::y(int k, int i, int j) const {
     return y0[k][i][j];
 }
 
+// z
 double NormalGrids3D::z(int k, int i, int j) const {
     assert(k >= 0 && k < (int)rVal.size());
     assert(i >= 0 && i < (int)thetaVal.size());
@@ -98,7 +102,7 @@ double NormalGrids3D::z(int k, int i, int j) const {
     return z0[k][i][j];
 }
 
-
+// x'
 double NormalGrids3D::xprime(int k, int i, int j) const {
     assert(k >= 0 && k < (int)rVal.size());
     assert(i >= 0 && i < (int)thetaVal.size());
@@ -106,6 +110,7 @@ double NormalGrids3D::xprime(int k, int i, int j) const {
     return x1[k][i][j];
 }
 
+// y'
 double NormalGrids3D::yprime(int k, int i, int j) const {
     assert(k >= 0 && k < (int)rVal.size());
     assert(i >= 0 && i < (int)thetaVal.size());
@@ -113,6 +118,7 @@ double NormalGrids3D::yprime(int k, int i, int j) const {
     return y1[k][i][j];
 }
 
+// z'
 double NormalGrids3D::zprime(int k, int i, int j) const {
     assert(k >= 0 && k < (int)rVal.size());
     assert(i >= 0 && i < (int)thetaVal.size());
@@ -120,14 +126,23 @@ double NormalGrids3D::zprime(int k, int i, int j) const {
     return z1[k][i][j];
 }
 
+// given radius, return the index for that radius(round to closest)
 int NormalGrids3D::radiusToIndex(double r) const {
     return (int)round((r-rVal[0])/dR);
 }
 
+// given theta angle, return the index for that angle(round downwards)
 int NormalGrids3D::thetaToIndex(double angle) const {
-    return (int)floor((angle-thetaMin)/dTheta);
+    return (int)floor((angle-thetaMin)/dTheta + 0.000001);
 }
 
+// given phi angle, return the index for that angle(round downwards)
 int NormalGrids3D::phiToIndex(double angle) const {
-    return (int)floor((angle-phiMin)/dPhi);
+    return (int)floor((angle-phiMin)/dPhi + 0.000001);
 }
+
+
+
+
+
+
