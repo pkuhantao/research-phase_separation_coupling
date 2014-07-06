@@ -6,7 +6,7 @@
 //
 //
 
-// 2D ghost frame which includes four ghost boundaries
+// 2D ghost frame surrounding Yin/Yang patch which includes four ghost boundaries
 // enabling the interpolation at the Yin/Yang patch boundaries
 
 #ifndef ____GhostFrame2D__

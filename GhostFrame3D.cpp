@@ -25,7 +25,9 @@ GhostFrame3D::GhostFrame3D(const NormalGrids3D &currGrids3D, const NormalGrids2D
     const int Nphi = currGrids3D.sizeInPhi();
     
     f0_ob.resize(Ntheta, vector<double>(Nphi, 0)); // outer boundary
-    f0_the_lo.resize(Nr, vector<double>(Nphi, 0)); // four internal ghost boundaries
+    f0_ib.resize(Ntheta, vector<double>(Nphi, 0)); // inner boundary
+    // four internal ghost boundaries
+    f0_the_lo.resize(Nr, vector<double>(Nphi, 0));
     f0_the_hi.resize(Nr, vector<double>(Nphi, 0));
     f0_phi_lo.resize(Nr, vector<double>(Ntheta, 0));
     f0_phi_hi.resize(Nr, vector<double>(Ntheta, 0));
@@ -36,9 +38,10 @@ GhostFrame3D::~GhostFrame3D() {
     delete ghost2D;
 }
 
-// given the bulk value in both its own grids and the opposite grids, interpolate the value in all ghost cells
-void GhostFrame3D::interpAllGhost(const vector<vector<vector<double> > > &f0, const vector<vector<vector<double> > > &f1) {
-    interpOuterBound(f0); // given the bulk value in its own grids, interpolate outer boundary
+// given the bulk value in both its own grids and the opposite grids and at the center, interpolate the value in all ghost cells
+void GhostFrame3D::interpAllGhost(const vector<vector<vector<double> > > &f0, const vector<vector<vector<double> > > &f1, const double f_ct) {
+    interpOuterBound(f0); // given the bulk value in its own grids, interpolate outer boundary by 'no flux' boundary condition
+    interpInnerBoundFromCt(f_ct); // given the value at center, interpolate inner boundary
     interpIntern(f1); // given the bulk value in its opposite grids, interpolate four internal boudaries
 }
 
@@ -49,10 +52,23 @@ void GhostFrame3D::interpOuterBound(const vector<vector<vector<double> > > &f0) 
     const int n2 = f0[0].size();
     const int n3 = f0[0][0].size();
     
-    // here we just use the no flow boundary condition
+    // here we just use the no flux boundary condition
     for (int i = 0; i < n2; i++) {
         for (int j = 0; j < n3; j++) {
             f0_ob[i][j] = f0[n1-2][i][j]; // n1-2 is the second largest radius
+        }
+    }
+}
+
+// given the value at the center, interpolate the value in the inner boundary
+// by simply copying the value at the center
+void GhostFrame3D::interpInnerBoundFromCt(const double f_ct) {
+    const int nrow = f0_ib.size();
+    const int ncol = f0_ib[0].size();
+    
+    for (int i = 0; i < nrow; i++) {
+        for (int j = 0; j < ncol; j++) {
+            f0_ib[i][j] = f_ct;
         }
     }
 }
