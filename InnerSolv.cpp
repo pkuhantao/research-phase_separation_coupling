@@ -16,23 +16,24 @@
 #include <cassert>
 #include <cmath>
 
-InnerSolv::InnerSolv(double dt) {
-    double M = 1;
-    double a = 1;
-    double b = 1;
-    double w = 1;
-    SolvProp props(M, w, a, b);
+// constructor, given dt and inner solvent properties, create grids, Yin/Yang patches and center
+InnerSolv::InnerSolv(double dt, SolvProp props) {
+    const double ro = props.ro; // outer radius
+    const double ri = props.ri; // inner radius
+    const int n1 = props.nR;
+    const int n2 = props.nTheta;
+    const int n3 = props.nPhi;
     
-    double ro = 10;
-    const int n1 = 5;
-    const int n2 = 20;
-    const int n3 = 24;
+    // create 2D Yin/Yang grids
     Yin2D = new NormalGrids2D(n2, n3, ro);
     Yang2D = new NormalGrids2D(n2, n3, ro);
-    Yin3D = new NormalGrids3D(ro, n1, n2, n3);
-    Yang3D = new NormalGrids3D(ro, n1, n2, n3);
+    // create 3D Yin/Yang grids
+    Yin3D = new NormalGrids3D(ro, ri, n1, n2, n3);
+    Yang3D = new NormalGrids3D(ro, ri, n1, n2, n3);
+    // create Yin/Yang patches
     Yin = new InnerSolvPatch(dt, props, Yin3D, Yin2D, Yang2D);
     Yang = new InnerSolvPatch(dt, props, Yang3D, Yang2D, Yin2D);
+    // create center
     ct = new Center(dt, props, *Yin, *Yang);
 }
 
@@ -79,8 +80,8 @@ void InnerSolv::initPsiSprYinGd(double x0, double y0, double z0, double radius, 
 
 // calculate chemical potential by double-well potential
 void InnerSolv::calcMu_dw() {
-    Yin->calcMu_dw(ct->psiAtCenter());
-    Yang->calcMu_dw(ct->psiAtCenter());
+    Yin->calcMu_dw();
+    Yang->calcMu_dw();
     ct->calcMu_dw();
     // after calculate the value in the bulk, we interpolate the value in ghost cells automatically
     interpMu();
@@ -96,21 +97,25 @@ void InnerSolv::calcMu_sd() {
 }
 
 void InnerSolv::updatePsi() {
-    Yin->updatePsi(ct->muAtCenter());
-    Yang->updatePsi(ct->muAtCenter());
+    Yin->updatePsi();
+    Yang->updatePsi();
     ct->updatePsi();
     // after calculate the value in the bulk, we interpolate the value in ghost cells automatically
     interpPsi();
 }
 
+// interpolate psi in ghost cells of Yin/Yang patches and the center
 void InnerSolv::interpPsi() {
-    Yin->interpPsi(Yang->psi);
-    Yang->interpPsi(Yin->psi);
+    Yin->interpPsi(Yang->psi, ct->psiAtCenter());
+    Yang->interpPsi(Yin->psi, ct->psiAtCenter());
+    ct->interpPsi(Yin->psi, Yang->psi);
 }
 
+// interpolate mu in ghost cells of Yin/Yang patches and the center
 void InnerSolv::interpMu() {
-    Yin->interpMu(Yang->mu);
-    Yang->interpMu(Yin->mu);
+    Yin->interpMu(Yang->mu, ct->muAtCenter());
+    Yang->interpMu(Yin->mu, ct->muAtCenter());
+    ct->interpMu(Yin->mu, Yang->mu);
 }
 
 
