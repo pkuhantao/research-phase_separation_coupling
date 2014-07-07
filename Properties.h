@@ -12,26 +12,39 @@
 
 // inner solvent properties
 struct SolvProp {
-    double M; // mobility
-    double w; // coefficients in phase field energy
-    double a;
-    double b;
-    double Lambda; // coupling strength
-    SolvProp() {M=1; w=1; a=1; b=1; Lambda=0;}; // by default, no coupling between inner solvent and membrane
-    SolvProp(double M1, double w1, double a1, double b1, double Lambda1) : M(M1), w(w1), a(a1), b(b1), Lambda(Lambda1) {};
+    // physical properties
+    double M = 1; // mobility
+    double w = 1; // coefficients in phase field energy
+    double a = 1;
+    double b = 1;
+    double Lambda = 0; // coupling strength, by default, no coupling between inner solvent and membrane
+    
+    // geometric properties
+    double ro = 2; // outer radius
+    double ri = 1; // inner radius
+    int nR = 1; // number of cells in r direction of Yin/Yang patch
+    int nTheta = 1; // number of cells in theta direction of Yin/Yang patch
+    int nPhi = 1; // number of cells in phi direction of Yin/Yang patch
 };
 
 // membrane properties
 struct MembProp {
-    double M; // mobility
-    double w; // coefficients in phase field energy
-    double a;
-    double b;
-    double Lambda; // coupling strength
-    double thickness; // thickness of the membrane
-    MembProp() {M=1; w=1; a=1; b=1; Lambda=0; thickness=1;}; // by default, no coupling between inner solvent and membrane
-    MembProp(double M1, double w1, double a1, double b1, double Lambda1, double thickness1) : M(M1), w(w1), a(a1), b(b1), Lambda(Lambda1), thickness(thickness1) {};
+    // physical properties
+    double M = 1; // mobility
+    double w = 1; // coefficients in phase field energy
+    double a = 1;
+    double b = 1;
+    double Lambda = 0; // coupling strength, by default, no coupling between inner solvent and membrane
+    
+    // geometric properties
+    double thickness = 1; // thickness of the membrane
+    double radius = 2; // curvature radius of the membrane shell
+    int nTheta = 1; // number of cells in theta direction of Yin/Yang patch
+    int nPhi = 1; // number of cells in phi direction of Yin/Yang patch
 };
+
+
+
 
 
 
