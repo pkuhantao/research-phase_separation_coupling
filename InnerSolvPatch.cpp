@@ -13,18 +13,16 @@
 #include "Properties.h"
 
 #include <vector>
-#include <time.h>
+#include <ctime>
 #include <cstdlib>
 #include <cmath>
 #include <cassert>
 
 using namespace std;
 
-InnerSolvPatch::InnerSolvPatch(double dt, SolvProp solvProp, NormalGrids3D *cur3D, NormalGrids2D *cur2D, NormalGrids2D *opp2D) {
+InnerSolvPatch::InnerSolvPatch(double dt, SolvProp solvProp, NormalGrids3D *cur3D, NormalGrids2D *cur2D, NormalGrids2D *opp2D): grids3D(cur3D) {
     props = solvProp;
     this->dt = dt;
-    // copy 3D grids
-    grids3D = cur3D;
     // create matrix for psi and mu
     const int n1 = cur3D->sizeInR();
     const int n2 = cur3D->sizeInTheta();
@@ -41,16 +39,18 @@ InnerSolvPatch::~InnerSolvPatch() {
     delete ghost3D_mu;
 }
 
-void InnerSolvPatch::interpPsi(const vector<vector<vector<double> > > &oppPsi) {
-    ghost3D_psi->interpAllGhost(psi, oppPsi);
+// given psi in opposite grids and at the center, interpolate the ghost cells for psi in current grids
+void InnerSolvPatch::interpPsi(const vector<vector<vector<double> > > &oppPsi, const double psiCt) {
+    ghost3D_psi->interpAllGhost(psi, oppPsi, psiCt);
 }
 
-void InnerSolvPatch::interpMu(const vector<vector<vector<double> > > &oppMu) {
-    ghost3D_mu->interpAllGhost(mu, oppMu);
+// given mu in opposite grids and at the center, interpolate the ghost cells for mu in current grids
+void InnerSolvPatch::interpMu(const vector<vector<vector<double> > > &oppMu, const double muCt) {
+    ghost3D_mu->interpAllGhost(mu, oppMu, muCt);
 }
 
-// calculate mu from double well potential, given psi at center
-void InnerSolvPatch::calcMu_dw(const double ctPsi) {
+// calculate mu from double well potential
+void InnerSolvPatch::calcMu_dw() {
     // dimensions
     const int n1 = mu.size();
     const int n2 = mu[0].size();
@@ -70,7 +70,7 @@ void InnerSolvPatch::calcMu_dw(const double ctPsi) {
             
             for (int j = 0; j < n3; j++) {
                 // calculate laplace
-                double r_lo = (k == 0) ? ctPsi : psi[k-1][i][j];
+                double r_lo = (k == 0) ? ghost3D_psi->f0_ib[i][j] : psi[k-1][i][j];
                 double r_hi = (k == (n1-1)) ? ghost3D_psi->f0_ob[i][j] : psi[k+1][i][j];
                 double the_lo = (i == 0) ? ghost3D_psi->f0_the_lo[k][j] : psi[k][i-1][j];
                 double the_hi = (i == (n2-1)) ? ghost3D_psi->f0_the_hi[k][j] : psi[k][i+1][j];
@@ -102,8 +102,8 @@ void InnerSolvPatch::calcMu_sd() {
     }
 }
 
-// update psi in the bulk, given mu at the center
-void InnerSolvPatch::updatePsi(const double ctMu) {
+// update psi in the bulk
+void InnerSolvPatch::updatePsi() {
     // dimensions
     const int n1 = psi.size();
     const int n2 = psi[0].size();
@@ -123,7 +123,7 @@ void InnerSolvPatch::updatePsi(const double ctMu) {
             
             for (int j = 0; j < n3; j++) {
                 // calculate laplace
-                double r_lo = (k == 0) ? ctMu : mu[k-1][i][j];
+                double r_lo = (k == 0) ? ghost3D_mu->f0_ib[i][j] : mu[k-1][i][j];
                 double r_hi = (k == (n1-1)) ? ghost3D_mu->f0_ob[i][j] : mu[k+1][i][j];
                 double the_lo = (i == 0) ? ghost3D_mu->f0_the_lo[k][j] : mu[k][i-1][j];
                 double the_hi = (i == (n2-1)) ? ghost3D_mu->f0_the_hi[k][j] : mu[k][i+1][j];
