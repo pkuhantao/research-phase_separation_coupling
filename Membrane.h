@@ -6,42 +6,41 @@
 //
 //
 
+// 2D membrane, which includes Yin and Yang patches
+
 #ifndef ____Membrane__
 #define ____Membrane__
 
+#include "Properties.h"
 #include "NormalGrids2D.h"
-#include "GhostFrame2D.h"
-
-#include <vector>
-#include <iostream>
+#include "MembranePatch.h"
 
 using namespace std;
 
 class Membrane {
 public:
-    Membrane(double M, double dt, NormalGrids2D *grids, GhostFrame2D *frame);
-    ~Membrane(){};
-    void initGauRand(double ave, double std); // initialize order parameter by Gaussian Distribution
-    void initDisk(int ic, int jc, int rad); // initialize order parameter by disk(+1) surrounded by -1
-    void interpPsi(const vector<vector<double> > &oppoPsi); // interpolate psi in ghost cells by given psi in complemental grids
-    void interpMu(const vector<vector<double> > &oppoMu); // interpolate mu in ghost cells by given mu in complemental grids
-    void calcMu_simdiff(); // calculate mu from psi, simple diffusion model (mu=psi)
-    void calcMu_doublewell(); // calculate mu from double well potential
+    Membrane(double dt, MembProp membProp); // constructor, given dt and membrane properties, create Yin/Yang patches and grids
+    ~Membrane();
+    
+    void initPsiGuass(const double ave, const double std); // initialize order parameter by Gaussian Distribution
+    void initPsiConst(const double val); // initialize order parameter by constant
+    
+    void calcMu_dw(); // calculate mu from double well potential
+    void calcMu_sd(); // calculate mu from simple diffusion model, where mu=psi
     void updatePsi(); // update psi from mu
     
-    vector<vector<double> > psi;
-    vector<vector<double> > mu;
+    const MembranePatch* YinPart() const {return Yin;}; // Yin part
+    const MembranePatch* YangPart() const {return Yang;}; // Yang part
     
 private:
-    static const double w = 1.0;
-    static const double a = 1.0;
-    static const double b = 1.0;
-    double M; // diffusivity
-    double dt; // time step
-    NormalGrids2D *normGrids; // normal grids
-    GhostFrame2D *ghostFm; // ghost frame
-    vector<double> psi_the_lo, psi_the_hi, psi_phi_lo, psi_phi_hi; // ghost cells for order parameter
-    vector<double> mu_the_lo, mu_the_hi, mu_phi_lo, mu_phi_hi; // ghost cells for chemical potential
+    void interpPsi(); // interpolate psi in ghost cells of Yin/Yang patches
+    void interpMu();  // interpolate mu in ghost cells of Yin/Yang patches
+    
+    MembranePatch *Yin, *Yang; // Yin, Yang patches
+    NormalGrids2D *Yin2D, *Yang2D; // 2D grids for Yin and Yang
 };
+
+
+
 
 #endif /* defined(____Membrane__) */
