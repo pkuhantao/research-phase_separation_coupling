@@ -1,0 +1,34 @@
+radius 10
+nR 5
+nTheta 10
+nPhi 30
+nt 8000001
+t_start 0
+dt 0.001
+
+numConfig 20
+numAnaly 20 
+
+M_s 1.0
+w_s 1.0
+a_s 1.0
+b_s 1.0
+
+M_m 1.0
+w_m 1.0
+a_m 1.0
+b_m 1.0
+thickness 1.0
+
+Lambda 0
+
+datafolder ./case0/data
+nthreads 6
+
+init_psi_s_file 
+ave_psi_s 0
+std_psi_s 0.1
+
+init_psi_m_file 
+ave_psi_m 0
+std_psi_m 0.1
