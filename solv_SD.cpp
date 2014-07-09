@@ -1,5 +1,5 @@
 //
-//  SimpleDiff_solv.cpp
+//  solv_SD.cpp
 //  
 //
 //  Created by Tao Han on 5/14/14.
