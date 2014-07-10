@@ -1,31 +1,40 @@
 CXX = g++
-CXXFLAGS = -g -Wall -O3 -std=c++11 -fopenmp
-LFLAGS_OMP = -fopenmp
+CXXFLAGS = -g -O3 #-fopenmp
+LFLAGS = -g -O3 #-fopenmp
 LIBS = -lm 
 
-# phase separation, where chemical potential is calculated by double-well potential
-PHASE_SEPARATION = PhaseSeparation_solv
-PS_OBJS = PhaseSeparation_solv.o NormalGrids2D.o NormalGrids3D.o GhostBC2D.o GhostFrame2D.o GhostFrame3D.o Center.o InnerSolvPatch.o InnerSolv.o util_funcs.o
+## basic objects
+BASIC_OBJS = NormalGrids2D.o NormalGrids3D.o GhostBC2D.o GhostFrame2D.o GhostFrame3D.o Center.o InnerSolvPatch.o InnerSolv.o MembranePatch.o Membrane.o util_funcs.o
 
-## simple diffusion, where chemical potential is equal to order parameter
-SIMPLE_DIFFUSION = SimpleDiff_solv 
-SD_OBJS = SimpleDiff_solv.o NormalGrids2D.o NormalGrids3D.o GhostBC2D.o GhostFrame2D.o GhostFrame3D.o Center.o InnerSolvPatch.o InnerSolv.o util_funcs.o
+# phase separation in inner solvent, where chemical potential is calculated by double-well potential
+SOLV_PS = solv_PS
+SOLV_PS_OBJS = solv_PS.o 
 
-
-all: $(PHASE_SEPARATION) $(SIMPLE_DIFFUSION)
-
-$(PHASE_SEPARATION) : $(PS_OBJS)
-	$(CXX) $(LFLAGS_OMP) -o $@ $^ $(LIBS)
-
-$(PS_OBJS) : 
-	$(CXX) -c $(PS_OBJS:.o=.cpp)
+## simple diffusion in inner solvent, where chemical potential is equal to order parameter
+SOLV_SD = solv_SD 
+SOLV_SD_OBJS = solv_SD.o
 
 
-$(SIMPLE_DIFFUSION) : $(SD_OBJS)
-	$(CXX) $(LFLAGS_OMP) -o $@ $^ $(LIBS)
+all: solv_ps solv_sd
 
-$(SD_OBJS) : 
-	$(CXX) -c $(SD_OBJS:.o=.cpp)
+solv_ps: $(SOLV_PS) 
+solv_sd: $(SOLV_SD)
+
+
+$(SOLV_PS): $(BASIC_OBJS) $(SOLV_PS_OBJS) 
+	$(CXX) $(LFLAGS) -o $@ $^ $(LIBS)
+$(SOLV_PS_OBJS): 
+	$(CXX) $(CXXFLAGS) -c $(SOLV_PS_OBJS:.o=.cpp)
+
+
+$(SOLV_SD): $(BASIC_OBJS) $(SOLV_SD_OBJS) 
+	$(CXX) $(LFLAGS) -o $@ $^ $(LIBS)
+$(SOLV_SD_OBJS): 
+	$(CXX) $(CXXFLAGS) -c $(SOLV_SD_OBJS:.o=.cpp)
+
+
+$(BASIC_OBJS):
+	$(CXX) $(CXXFLAGS) -c $(BASIC_OBJS:.o=.cpp)
 
 
 clean:
