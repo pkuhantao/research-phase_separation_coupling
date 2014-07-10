@@ -10,6 +10,8 @@
 #include "InnerSolv.h"
 #include "InnerSolvPatch.h"
 #include "Center.h"
+#include "Membrane.h"
+#include "MembranePatch.h"
 #include "NormalGrids2D.h"
 #include "NormalGrids3D.h"
 
@@ -18,16 +20,15 @@
 #include <vector>
 #include <string>
 #include <sstream>
-
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 
 
 using namespace std;
 
 
-// print out the whole inner solvent state in (x, y, z) of Yin grids
-void printMergeSolvState(const InnerSolv &inSolv, int stepnum, string foldername) {
+// print out the whole inner solvent state in cartesian coordinates (x, y, z) of Yin grids
+void printSolvState_car(const InnerSolv &inSolv, int stepnum, string foldername) {
     ostringstream oss;
 	oss << foldername << "/solv_YinYang_psi_" << stepnum << ".dat";
 	
@@ -78,10 +79,10 @@ void printMergeSolvState(const InnerSolv &inSolv, int stepnum, string foldername
 
 
 
-//print out memb order parameter
-void printMembState(const vector<vector<double> > &psi, const NormalGrids2D &grids, int YinYangID, int stepnum, string foldername) {
+// print out the membrane Yin/Yang patch state in its own spherical coordinates
+void printMembPatchState_sph(const vector<vector<double> > &psi, const NormalGrids2D &grids, bool isYinPatch, int stepnum, string foldername) {
     ostringstream oss;
-	oss << foldername << "/memb_" << (YinYangID==0 ? "Yin" : "Yang") << "_psi_" << stepnum << ".dat";
+	oss << foldername << "/memb_" << (isYinPatch ? "Yin" : "Yang") << "_psi_" << stepnum << ".dat";
 	
 	FILE *fp_psi;
 	
@@ -110,8 +111,8 @@ void printMembState(const vector<vector<double> > &psi, const NormalGrids2D &gri
 
 
 
-// print out the whole membrane in (x, y, z) of Yin grids
-void printMergeMembState(const vector<vector<double> > &psi_Yin, const NormalGrids2D &grids_Yin, const vector<vector<double> > &psi_Yang, const NormalGrids2D &grids_Yang, int stepnum, string foldername) {
+// print out the whole membrane state in cartesian coordinates (x, y, z) of Yin grids
+void printMembState_car(const Membrane &memb, int stepnum, string foldername) {
     ostringstream oss;
 	oss << foldername << "/memb_YinYang_psi_" << stepnum << ".dat";
 	
@@ -126,16 +127,27 @@ void printMergeMembState(const vector<vector<double> > &psi_Yin, const NormalGri
 	//output data
 	fprintf(fp_psi, "VARIABLES = x, y, z, psi\n");
     
+    // get all parts
+    const MembranePatch *Yin = memb.YinPart();
+    const MembranePatch *Yang = memb.YangPart();
+    const NormalGrids2D *Yin2D = memb.YinGrids();
+    const NormalGrids2D *Yang2D = memb.YangGrids();
+    
+    // dimensions (assume Yin and Yang have the same dimensions)
+    const int n1 = Yin->psi.size();
+    const int n2 = Yin->psi[0].size();
+    
+    
     // print out the Yin part
-	for (int i = 0; i < psi_Yin.size(); i++) {
-        for (int j = 0; j < psi_Yin[0].size(); j++) {
-            fprintf(fp_psi, "%lf %lf %lf %lf\n", grids_Yin.x(i, j), grids_Yin.y(i, j), grids_Yin.z(i, j), psi_Yin[i][j]);
+	for (int i = 0; i < n1; i++) {
+        for (int j = 0; j < n2; j++) {
+            fprintf(fp_psi, "%lf %lf %lf %lf\n", Yin2D->x(i, j), Yin2D->y(i, j), Yin2D->z(i, j), Yin->psi[i][j]);
         }
     }
     // print out the Yang part
-	for (int i = 0; i < psi_Yang.size(); i++) {
-        for (int j = 0; j < psi_Yang[0].size(); j++) {
-            fprintf(fp_psi, "%lf %lf %lf %lf\n", grids_Yang.xprime(i, j), grids_Yang.yprime(i, j), grids_Yang.zprime(i, j), psi_Yang[i][j]);
+	for (int i = 0; i < n1; i++) {
+        for (int j = 0; j < n2; j++) {
+            fprintf(fp_psi, "%lf %lf %lf %lf\n", Yang2D->xprime(i, j), Yang2D->yprime(i, j), Yang2D->zprime(i, j), Yang->psi[i][j]);
         }
     }
     
