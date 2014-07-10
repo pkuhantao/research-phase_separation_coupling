@@ -94,7 +94,7 @@ void printMembPatchState_sph(const vector<vector<double> > &psi, const NormalGri
 	
 	//output data
 	fprintf(fp_psi, "VARIABLES = phi, r, theta, psi\n");
-	fprintf(fp_psi, "ZONE I = %d, J = %d, K = %d\n", psi[0].size(), 1, psi.size());
+	fprintf(fp_psi, "ZONE I = %d, J = %d, K = %d\n", (int)psi[0].size(), 1, (int)psi.size());
     
     // print out the result
 	double radius = grids.rad();
