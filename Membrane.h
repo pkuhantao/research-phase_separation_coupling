@@ -31,6 +31,8 @@ public:
     
     const MembranePatch* YinPart() const {return Yin;}; // Yin part
     const MembranePatch* YangPart() const {return Yang;}; // Yang part
+    const NormalGrids2D* YinGrids() const {return Yin2D;}; // Yin grids
+    const NormalGrids2D* YangGrids() const {return Yang2D;}; // Yang grids
     
 private:
     void interpPsi(); // interpolate psi in ghost cells of Yin/Yang patches
