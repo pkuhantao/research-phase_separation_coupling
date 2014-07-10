@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
         
         // store the state every nPrintState steps
 		if ((i % nPrintState) == 0) {
-			printMergeSolvState(inSol, i+t_start, datafolder);
+			printSolvState_car(inSol, i+t_start, datafolder);
 		}
         
         // update order parameters
