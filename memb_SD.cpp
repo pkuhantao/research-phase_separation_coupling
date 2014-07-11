@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
     const double x0 = radius/2.0;
     const double y0 = 0;
     const double z0 = 0;
-    const double nu_rad = radius;
+    const double nu_rad = radius*2.0/3.0;
     memb.initPsiDiskYinGd(x0, y0, z0, nu_rad, -1, 1);
     
     
