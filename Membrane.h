@@ -24,6 +24,7 @@ public:
     
     void initPsiGuass(const double ave, const double std); // initialize order parameter by Gaussian Distribution
     void initPsiConst(const double val); // initialize order parameter by constant
+    void initPsiDiskYinGd(double x0, double y0, double z0, double radius, double inVal, double otVal); // initialize psi=inVal within the sphere with given radius and center (x0, y0, z0) in Yin grid, otVal outside of sphere, effectively forms a disk on the membrane
     
     void calcMu_dw(); // calculate mu from double well potential
     void calcMu_sd(); // calculate mu from simple diffusion model, where mu=psi

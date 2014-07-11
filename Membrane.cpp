@@ -11,6 +11,8 @@
 #include "NormalGrids2D.h"
 #include "MembranePatch.h"
 
+#include <cassert>
+
 using namespace std;
 
 // constructor, given dt and membrane properties, create Yin/Yang patches and grids
@@ -45,6 +47,15 @@ void Membrane::initPsiGuass(const double ave, const double std) {
 void Membrane::initPsiConst(const double val) {
     Yin->initPsiConst(val);
     Yang->initPsiConst(val);
+    // after initialization, we interpolate the value in ghost cells automatically
+    interpPsi();
+}
+
+ // initialize psi=inVal within the sphere with given radius and center (x0, y0, z0) in Yin grid, psi=otVal outside of sphere, effectively forms a disk on the membrane
+void Membrane::initPsiDiskYinGd(double x0, double y0, double z0, double radius, double inVal, double otVal) {
+    assert(radius >= 0);
+    Yin->initPsiDiskSfGd(x0, y0, z0, radius, inVal, otVal);
+    Yang->initPsiDiskOpGd(x0, y0, z0, radius, inVal, otVal);
     // after initialization, we interpolate the value in ghost cells automatically
     interpPsi();
 }

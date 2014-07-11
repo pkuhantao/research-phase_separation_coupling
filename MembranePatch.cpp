@@ -15,6 +15,7 @@
 #include <cmath>
 #include <ctime>
 #include <cstdlib>
+#include <cassert>
 
 using namespace std;
 
@@ -160,6 +161,43 @@ void MembranePatch::initPsiConst(const double val) {
     }
 }
 
+// initialize psi=inVal within sphere with given radius and center(x, y, z) in self grid, psi=otVal outside, effectively form a disk on the membrane
+void MembranePatch::initPsiDiskSfGd(double x0, double y0, double z0, double radius, double inVal, double otVal) {
+    assert(radius >= 0);
+    // dimensions
+    const int n1 = psi.size();
+    const int n2 = psi[0].size();
+    
+    for (int i = 0; i < n1; i++) {
+        for (int j = 0; j < n2; j++) {
+            double x = grids2D->x(i, j);
+            double y = grids2D->y(i, j);
+            double z = grids2D->z(i, j);
+            double dist = sqrt((x-x0)*(x-x0) + (y-y0)*(y-y0) + (z-z0)*(z-z0));
+            if (dist < radius) psi[i][j] = inVal;
+            else psi[i][j] = otVal;
+        }
+    }
+}
+
+// initialize psi=inVal within sphere with given radius and center(xp, yp, zp) in opposite grid, psi=otVal outside, effectively form a disk on the membrane
+void MembranePatch::initPsiDiskOpGd(double xp0, double yp0, double zp0, double radius, double inVal, double otVal) {
+    assert(radius >= 0);
+    // dimensions
+    const int n1 = psi.size();
+    const int n2 = psi[0].size();
+    
+    for (int i = 0; i < n1; i++) {
+        for (int j = 0; j < n2; j++) {
+            double xp = grids2D->xprime(i, j);
+            double yp = grids2D->yprime(i, j);
+            double zp = grids2D->zprime(i, j);
+            double dist = sqrt((xp-xp0)*(xp-xp0) + (yp-yp0)*(yp-yp0) + (zp-zp0)*(zp-zp0));
+            if (dist < radius) psi[i][j] = inVal;
+            else psi[i][j] = otVal;
+        }
+    }
+}
 
 
 
