@@ -112,7 +112,9 @@ void MembranePatch::updatePsi() {
 
 // initialize order parameter by Gaussian Distribution
 void MembranePatch::initPsiGuass(const double ave, const double std) {
-	double sum = 0.0;
+	double sum_psi = 0.0;  // sum of weighted psi, since each cell has different size
+    double sum_area = 0.0; // sum of rescaled area
+    
 	double x1, x2, w, y1, y2;
 	int iset = 0;
     
@@ -120,6 +122,7 @@ void MembranePatch::initPsiGuass(const double ave, const double std) {
     const int ncol = psi[0].size();
 	
 	for (int i = 0; i < nrow; i++) {
+        double wt = sin(grids2D->theta(i)); // weight for each cell
 		for (int j = 0; j < ncol; j++) {
 			if (iset == 0) {
 				do {
@@ -138,11 +141,13 @@ void MembranePatch::initPsiGuass(const double ave, const double std) {
 				psi[i][j] = y1;
 				iset = 0;
 			}
-			sum = sum + psi[i][j];
+ 
+			sum_psi += psi[i][j]*wt;
+            sum_area += wt;
 		}
 	}
 	
-	double average = sum / (nrow * ncol);
+	double average = sum_psi / sum_area;
 	
 	//rescale
 	for (int i = 0; i < nrow; i++) {

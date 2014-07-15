@@ -43,7 +43,7 @@ private:
     double dt; // time step
     MembProp props; // membrane properties
     
-    const NormalGrids2D *grids2D; // 2D normal grids
+    const NormalGrids2D *grids2D; // 2D current normal grids
     GhostFrame2D *ghost2D_psi, *ghost2D_mu; // 2D ghost frames for psi and mu
 };
 
