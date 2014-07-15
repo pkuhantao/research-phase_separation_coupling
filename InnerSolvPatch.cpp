@@ -142,7 +142,9 @@ void InnerSolvPatch::updatePsi() {
 
 // given average and standard deviation, initialize psi by Guassian Random noise
 void InnerSolvPatch::initPsiGuass(const double ave, const double std) {
-	double sum = 0.0;
+	double sum_psi = 0.0;  // sum of weighted psi, since each cell has different size
+    double sum_vol = 0.0; // sum of rescaled volume
+    
 	double x1, x2, w, y1, y2;
 	int iset = 0;
     
@@ -152,7 +154,9 @@ void InnerSolvPatch::initPsiGuass(const double ave, const double std) {
     const int n3 = psi[0][0].size();
     
     for (int k = 0; k < n1; k++) {
+        double rk = grids3D->rad(k); // radius
         for (int i = 0; i < n2; i++) {
+            double wt = rk * rk * sin(grids3D->theta(i)); // weight for each cell
             for (int j = 0; j < n3; j++) {
                 if (iset == 0) {
                     do {
@@ -171,12 +175,14 @@ void InnerSolvPatch::initPsiGuass(const double ave, const double std) {
                     psi[k][i][j] = y1;
                     iset = 0;
                 }
-                sum = sum + psi[k][i][j];
+
+                sum_psi += psi[k][i][j]*wt;
+                sum_vol += wt;
             }
         }
     }
 	
-	double average = sum / (n1*n2*n3);
+	double average = sum_psi / sum_vol;
 	
 	//rescale
     for (int k = 0; k < n1; k++) {

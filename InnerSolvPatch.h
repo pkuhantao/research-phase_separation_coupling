@@ -41,7 +41,7 @@ public:
     
     vector<vector<vector<double> > > psi; // psi in the bulk
     vector<vector<vector<double> > > mu; // mu in the bulk
-    const NormalGrids3D *grids3D; // 3D normal grids
+    const NormalGrids3D *grids3D; // current 3D normal grids
     
 private:
     SolvProp props; // inner solvent properties
