@@ -63,6 +63,11 @@ clean:
 	$(RM) *.o *~
 	$(RM) .depend
 
+cleanAll:
+	$(RM) *.o *~
+	$(RM) .depend
+	$(RM) $(SOLV_PS) $(SOLV_SD) $(MEMB_PS) $(MEMB_SD)
+
 depend:
 	$(CXX) -MM $(CXXFLAGS) *.cpp > .depend
 
