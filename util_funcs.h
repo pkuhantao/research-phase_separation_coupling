@@ -27,6 +27,37 @@ void printMembPatchState_sph(const vector<vector<double> > &psi, const NormalGri
 // print out the whole membrane state in cartesian coordinates (x, y, z) of Yin grids
 void printMembState_car(const Membrane &memb, int stepnum, string foldername);
 
+// print out the analysis for the whole 2D membrane
+void printMembAnaly(const Membrane &memb, int stepnum, string foldername);
+
+// max of given 2D matrix
+double max_2D(const vector<vector<double> > &mat);
+
+// min of given 2D matrix
+double min_2D(const vector<vector<double> > &mat);
+
+// max of given 3D matrix
+double max_3D(const vector<vector<vector<double> > > &mat);
+
+// min of given 3D matrix
+double min_3D(const vector<vector<vector<double> > > &mat);
+
+// max of psi on 2D membrane
+double max_psi_memb(const Membrane &memb);
+
+// min of psi on 2D membrane
+double min_psi_memb(const Membrane &memb);
+
+// average of psi on 2D membrane
+// Note: there exists overlapping cells from Yin&Yang patches
+double ave_psi_memb(const Membrane &memb);
+
+
+
+
+
+
+
 
 
 #endif /* defined(____util_funcs__) */
