@@ -30,6 +30,10 @@ void printMembState_car(const Membrane &memb, int stepnum, string foldername);
 // print out the analysis for the whole 2D membrane
 void printMembAnaly(const Membrane &memb, int stepnum, string foldername);
 
+// print out the analysis for the whole 3D inner solvent
+void printInSolvAnaly(const InnerSolv &inSolv, int stepnum, string foldername);
+
+
 // max of given 2D matrix
 double max_2D(const vector<vector<double> > &mat);
 

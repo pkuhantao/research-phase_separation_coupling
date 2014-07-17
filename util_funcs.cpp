@@ -180,6 +180,27 @@ void printMembAnaly(const Membrane &memb, int stepnum, string foldername) {
 	fclose(fp_analy);
 }
 
+// print out the analysis for the whole 3D inner solvent
+void printInSolvAnaly(const InnerSolv &inSolv, int stepnum, string foldername) {
+    ostringstream oss;
+	oss << foldername << "/inSolv_analysis.dat";
+	
+	FILE *fp_analy;
+	
+	// open the file
+	if ((fp_analy = fopen(oss.str().c_str(), "a")) == NULL) {
+		printf("cannot open file\n");
+		exit(1);
+	}
+	
+	// add title if stepnum == 0
+	if (stepnum == 0) fprintf(fp_analy, "VARIABLES = timestep, max_psi, min_psi, ave_psi\n");
+    // output analysis
+    fprintf(fp_analy, "%d %lf %lf %lf\n", stepnum, max_psi_inso(inSolv), min_psi_inso(inSolv), ave_psi_inso(inSolv));
+    
+    // close the file
+	fclose(fp_analy);
+}
 
 
 // max of given 2D matrix
