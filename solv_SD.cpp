@@ -102,6 +102,11 @@ int main(int argc, char* argv[]) {
 			printSolvState_car(inSol, i+t_start, datafolder);
 		}
         
+        // store the analysis every nPrintAnaly steps
+		if ((i % nPrintAnaly) == 0) {
+			printInSolvAnaly(inSol, i+t_start, datafolder);
+		}
+        
         // update order parameters
         inSol.updatePsi();
     }
