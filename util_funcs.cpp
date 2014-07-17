@@ -25,6 +25,7 @@
 #include <algorithm>
 #include <cmath>
 
+#define PI 3.14159265
 
 using namespace std;
 
@@ -293,6 +294,78 @@ double ave_psi_memb(const Membrane &memb) {
 }
 
 
+// max of psi in 3D inner solvent
+double max_psi_inso(const InnerSolv &inSolv) {
+    double max_Yin = max_3D(inSolv.YinPart()->psi);
+    double max_Yang = max_3D(inSolv.YangPart()->psi);
+    double max_Ct = inSolv.CenterPart()->psiAtCenter();
+    return max(max(max_Yin, max_Yang), max_Ct);
+}
+
+// min of psi in 3D inner solvent
+double min_psi_inso(const InnerSolv &inSolv) {
+    double min_Yin = min_3D(inSolv.YinPart()->psi);
+    double min_Yang = min_3D(inSolv.YangPart()->psi);
+    double min_Ct = inSolv.CenterPart()->psiAtCenter();
+    return min(min(min_Yin, min_Yang), min_Ct);
+}
+
+// average of psi in 3D inner solvent
+// Note: there exists overlapping cells from Yin&Yang patches
+// Note: the radius of the center part is ri-dr/2
+double ave_psi_inso(const InnerSolv &inSolv) {
+    const InnerSolvPatch *Yin = inSolv.YinPart();
+    const InnerSolvPatch *Yang = inSolv.YangPart();
+    const Center *ct = inSolv.CenterPart();
+    const NormalGrids3D *YinGrids = Yin->grids3D;
+    const NormalGrids3D *YangGrids = Yang->grids3D;
+    
+    // calculate the Yin part
+    double sum_psi_Yin = 0.0;  // sum of weighted psi, since each cell has different size
+    double sum_vol_Yin = 0.0; // sum of volume
+    int n1 = Yin->psi.size(); // dimensions
+    int n2 = Yin->psi[0].size();
+    int n3 = Yin->psi[0][0].size();
+    for (int k = 0; k < n1; k++) {
+        double rad = YinGrids->rad(k); // radius
+        for (int i = 0; i < n2; i++) {
+            double wt = rad * rad * sin(YinGrids->theta(i)); // weight for each cell
+            for (int j = 0; j < n3; j++) {
+                sum_psi_Yin += Yin->psi[k][i][j]*wt;
+                sum_vol_Yin += wt;
+            }
+        }
+    }
+    sum_psi_Yin *= YinGrids->dRAD() * YinGrids->dTHETA() * YinGrids->dPHI();
+    sum_vol_Yin *= YinGrids->dRAD() * YinGrids->dTHETA() * YinGrids->dPHI();
+    
+    // calculate the Yang part
+    double sum_psi_Yang = 0.0;  // sum of weighted psi, since each cell has different size
+    double sum_vol_Yang = 0.0; // sum of volume
+    n1 = Yang->psi.size(); // dimensions
+    n2 = Yang->psi[0].size();
+    n3 = Yang->psi[0][0].size();
+    for (int k = 0; k < n1; k++) {
+        double rad = YangGrids->rad(k); // radius
+        for (int i = 0; i < n2; i++) {
+            double wt = rad * rad * sin(YangGrids->theta(i)); // weight for each cell
+            for (int j = 0; j < n3; j++) {
+                sum_psi_Yang += Yang->psi[k][i][j]*wt;
+                sum_vol_Yang += wt;
+            }
+        }
+    }
+    sum_psi_Yang *= YangGrids->dRAD() * YangGrids->dTHETA() * YangGrids->dPHI();
+    sum_vol_Yang *= YangGrids->dRAD() * YangGrids->dTHETA() * YangGrids->dPHI();
+    
+    // calculate the center part
+    double rad_ct = YinGrids->rad(0) - YinGrids->dRAD()/2; // rad = ri-dr/2
+    double sum_vol_ct = (4.0*PI/3.0) * rad_ct * rad_ct * rad_ct;
+    double sum_psi_ct = ct->psiAtCenter() * sum_vol_ct;
+    
+    // return the average
+    return (sum_psi_Yin+sum_psi_Yang+sum_psi_ct) / (sum_vol_Yin+sum_vol_Yang+sum_vol_ct);
+}
 
 
 

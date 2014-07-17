@@ -52,6 +52,18 @@ double min_psi_memb(const Membrane &memb);
 // Note: there exists overlapping cells from Yin&Yang patches
 double ave_psi_memb(const Membrane &memb);
 
+// max of psi in 3D inner solvent
+double max_psi_inso(const InnerSolv &inSolv);
+
+// min of psi in 3D inner solvent
+double min_psi_inso(const InnerSolv &inSolv);
+
+// average of psi in 3D inner solvent
+// Note: there exists overlapping cells from Yin&Yang patches
+// Note: the radius of the center part is ri-dr/2
+double ave_psi_inso(const InnerSolv &inSolv);
+
+
 
 
 
