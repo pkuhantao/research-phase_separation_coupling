@@ -1,0 +1,15 @@
+#!/bin/sh
+#SBATCH -N 1                           # nodes=1
+#SBATCH --ntasks-per-node=1            # ppn=1
+#SBATCH -t 24:00:00                    # 24 hours walltime
+
+#SBATCH -J cps_insolv_only          # job name
+#SBATCH --mail-user=than@princeton.edu
+#SBATCH --mail-type=begin
+#SBATCH --mail-type=end
+
+module load openmpi
+
+cd dict
+
+./program input.txt
