@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
         
         // store the state every nPrintState steps
 		if ((i % nPrintState) == 0) {
-			printMembState_car(memb, i+t_start, datafolder);
+			printMembPatchesState_sfSph(memb, i+t_start, datafolder);
 		}
         // store the analysis every nPrintAnaly steps
         if ((i % nPrintAnaly) == 0) {
