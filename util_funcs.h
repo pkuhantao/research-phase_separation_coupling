@@ -23,6 +23,10 @@ using namespace std;
 // print out the whole inner solvent state in cartesian coordinates (x, y, z) of Yin grids
 void printSolvState_car(const InnerSolv &inSolv, int stepnum, string foldername);
 
+// print out the inner solvent Yin&Yang patches' state separately in their own spherical coordinates
+// and the center part's state in cartesian coordinates
+void printInSolvPatchesState_sfSph(const InnerSolv &inSolv, int stepnum, string foldername);
+
 // print out the analysis for the whole 3D inner solvent
 void printInSolvAnaly(const InnerSolv &inSolv, int stepnum, string foldername);
 
@@ -40,7 +44,10 @@ void printMembAnaly(const Membrane &memb, int stepnum, string foldername);
 // the followings are auxillary functions
 
 // print out the inner solvent Yin/Yang patch state in its own spherical coordinates
-// void printInsolvPatchState_sph(const InnerSolvPatch &inSolvPatch, bool isYinPatch, int stepnum, string foldername);
+void printInsolvPatchState_sph(const InnerSolvPatch &inSolvPatch, bool isYinPatch, int stepnum, string foldername);
+
+// print out the inner solvent center part's state
+void printInsolvCtState(const Center &ct, int stepnum, string foldername);
 
 // print out the membrane Yin/Yang patch state in its own spherical coordinates
 void printMembPatchState_sph(const MembranePatch &membPatch, bool isYinPatch, int stepnum, string foldername);

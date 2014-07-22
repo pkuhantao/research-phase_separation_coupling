@@ -81,10 +81,81 @@ void printSolvState_car(const InnerSolv &inSolv, int stepnum, string foldername)
 }
 
 
+// print out the inner solvent Yin&Yang patches' state separately in their own spherical coordinates
+// and the center part's state in cartesian coordinates
+void printInSolvPatchesState_sfSph(const InnerSolv &inSolv, int stepnum, string foldername) {
+    printInsolvPatchState_sph(*(inSolv.YinPart()), true, stepnum, foldername); // Yin part
+    printInsolvPatchState_sph(*(inSolv.YangPart()), false, stepnum, foldername); // Yang part
+    printInsolvCtState(*(inSolv.CenterPart()), stepnum, foldername); // center part
+}
+
+
 // print out the membrane Yin&Yang patches' state separately in their own spherical coordinates
 void printMembPatchesState_sfSph(const Membrane &memb, int stepnum, string foldername) {
     printMembPatchState_sph(*(memb.YinPart()), true, stepnum, foldername); // Yin part
     printMembPatchState_sph(*(memb.YangPart()), false, stepnum, foldername); // Yang part
+}
+
+
+// print out the inner solvent center part's state
+void printInsolvCtState(const Center &ct, int stepnum, string foldername) {
+    ostringstream oss;
+	oss << foldername << "/inSolv_center_psi_" << stepnum << ".dat";
+	
+	FILE *fp_psi;
+	
+	//create files
+	if ((fp_psi = fopen(oss.str().c_str(), "w")) == NULL) {
+		printf("cannot open file\n");
+		exit(1);
+	}
+	   
+	//output data
+	fprintf(fp_psi, "VARIABLES = X, Y, Z, psi\n");
+	fprintf(fp_psi, "ZONE I = 1, J = 1, K = 1\n");
+    fprintf(fp_psi, "%lf %lf %lf %lf\n", 0.0, 0.0, 0.0, ct.psiAtCenter());
+    
+	//close the file
+	fclose(fp_psi);
+}
+
+
+// print out the inner solvent Yin/Yang patch state in its own spherical coordinates
+void printInsolvPatchState_sph(const InnerSolvPatch &inSolvPatch, bool isYinPatch, int stepnum, string foldername) {
+    ostringstream oss;
+	oss << foldername << "/inSolv_" << (isYinPatch ? "Yin" : "Yang") << "_psi_" << stepnum << ".dat";
+	
+	FILE *fp_psi;
+	
+	//create files
+	if ((fp_psi = fopen(oss.str().c_str(), "w")) == NULL) {
+		printf("cannot open file\n");
+		exit(1);
+	}
+	
+    // sizes in each dimension
+    const int n1 = inSolvPatch.psi.size(); // r direction
+    const int n2 = inSolvPatch.psi[0].size(); // theta direction
+    const int n3 = inSolvPatch.psi[0][0].size(); // phi direction
+    
+	//output data
+	fprintf(fp_psi, "VARIABLES = phi, r, theta, psi\n");
+	fprintf(fp_psi, "ZONE I = %d, J = %d, K = %d\n", n3, n1, n2);
+    
+    // print out the result
+    for (int k = 0; k < n1; k++) {
+        double radius = inSolvPatch.grids3D->rad(k);
+        for (int i = 0; i < n2; i++) {
+            double theta = inSolvPatch.grids3D->theta(i);
+            for (int j = 0; j < n3; j++) {
+                double phi = inSolvPatch.grids3D->phi(j);
+                fprintf(fp_psi, "%lf %lf %lf %lf\n", phi, radius, theta, inSolvPatch.psi[k][i][j]);
+            }
+        }
+    }
+
+	//close the file
+	fclose(fp_psi);
 }
 
 
