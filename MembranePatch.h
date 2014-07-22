@@ -38,12 +38,12 @@ public:
     
     vector<vector<double> > psi; // psi in the bulk
     vector<vector<double> > mu; // mu in the bulk
+    const NormalGrids2D *grids2D; // current 2D normal grids
 
 private:
     double dt; // time step
     MembProp props; // membrane properties
     
-    const NormalGrids2D *grids2D; // 2D current normal grids
     GhostFrame2D *ghost2D_psi, *ghost2D_mu; // 2D ghost frames for psi and mu
 };
 
