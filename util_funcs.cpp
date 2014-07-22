@@ -83,7 +83,7 @@ void printSolvState_car(const InnerSolv &inSolv, int stepnum, string foldername)
 
 // print out the membrane Yin&Yang patches' state separately in their own spherical coordinates
 void printMembPatchesState_sfSph(const Membrane &memb, int stepnum, string foldername) {
-    printMembPatchState_sph(*(memb.YinPart()), ture, stepnum, foldername); // Yin part
+    printMembPatchState_sph(*(memb.YinPart()), true, stepnum, foldername); // Yin part
     printMembPatchState_sph(*(memb.YangPart()), false, stepnum, foldername); // Yang part
 }
 
