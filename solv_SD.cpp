@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
         
         // store the state every nPrintState steps
 		if ((i % nPrintState) == 0) {
-			printSolvState_car(inSol, i+t_start, datafolder);
+			printInSolvPatchesState_sfSph(inSol, i+t_start, datafolder);
 		}
         
         // store the analysis every nPrintAnaly steps
