@@ -31,7 +31,7 @@ using namespace std;
 
 
 // print out the whole inner solvent state in cartesian coordinates (x, y, z) of Yin grids
-void printSolvState_car(const InnerSolv &inSolv, int stepnum, string foldername) {
+void printInSolvState_car(const InnerSolv &inSolv, int stepnum, string foldername) {
     ostringstream oss;
 	oss << foldername << "/solv_YinYang_psi_" << stepnum << ".dat";
 	

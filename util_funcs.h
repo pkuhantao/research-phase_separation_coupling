@@ -21,7 +21,7 @@ using namespace std;
 
 
 // print out the whole inner solvent state in cartesian coordinates (x, y, z) of Yin grids
-void printSolvState_car(const InnerSolv &inSolv, int stepnum, string foldername);
+void printInSolvState_car(const InnerSolv &inSolv, int stepnum, string foldername);
 
 // print out the inner solvent Yin&Yang patches' state separately in their own spherical coordinates
 // and the center part's state in cartesian coordinates
