@@ -143,10 +143,10 @@ void printInsolvPatchState_sph(const InnerSolvPatch &inSolvPatch, bool isYinPatc
 	fprintf(fp_psi, "ZONE I = %d, J = %d, K = %d\n", n3, n1, n2);
     
     // print out the result
-    for (int k = 0; k < n1; k++) {
-        double radius = inSolvPatch.grids3D->rad(k);
-        for (int i = 0; i < n2; i++) {
-            double theta = inSolvPatch.grids3D->theta(i);
+    for (int i = 0; i < n2; i++) {
+        double theta = inSolvPatch.grids3D->theta(i);
+        for (int k = 0; k < n1; k++) {
+            double radius = inSolvPatch.grids3D->rad(k);
             for (int j = 0; j < n3; j++) {
                 double phi = inSolvPatch.grids3D->phi(j);
                 fprintf(fp_psi, "%lf %lf %lf %lf\n", phi, radius, theta, inSolvPatch.psi[k][i][j]);
