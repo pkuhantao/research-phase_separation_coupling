@@ -18,20 +18,33 @@
 
 using namespace std;
 
+
+
 // print out the whole inner solvent state in cartesian coordinates (x, y, z) of Yin grids
 void printSolvState_car(const InnerSolv &inSolv, int stepnum, string foldername);
 
-// print out the membrane Yin/Yang patch state in its own spherical coordinates
-void printMembPatchState_sph(const vector<vector<double> > &psi, const NormalGrids2D &grids, bool isYinPatch, int stepnum, string foldername);
+// print out the analysis for the whole 3D inner solvent
+void printInSolvAnaly(const InnerSolv &inSolv, int stepnum, string foldername);
 
 // print out the whole membrane state in cartesian coordinates (x, y, z) of Yin grids
 void printMembState_car(const Membrane &memb, int stepnum, string foldername);
 
+// print out the membrane Yin&Yang patches' state separately in their own spherical coordinates
+void printMembPatchesState_sfSph(const Membrane &memb, int stepnum, string foldername);
+
 // print out the analysis for the whole 2D membrane
 void printMembAnaly(const Membrane &memb, int stepnum, string foldername);
 
-// print out the analysis for the whole 3D inner solvent
-void printInSolvAnaly(const InnerSolv &inSolv, int stepnum, string foldername);
+
+
+// the followings are auxillary functions
+
+// print out the inner solvent Yin/Yang patch state in its own spherical coordinates
+// void printInsolvPatchState_sph(const InnerSolvPatch &inSolvPatch, bool isYinPatch, int stepnum, string foldername);
+
+// print out the membrane Yin/Yang patch state in its own spherical coordinates
+void printMembPatchState_sph(const MembranePatch &membPatch, bool isYinPatch, int stepnum, string foldername);
+
 
 
 // max of given 2D matrix

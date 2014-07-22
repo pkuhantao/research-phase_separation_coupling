@@ -81,9 +81,15 @@ void printSolvState_car(const InnerSolv &inSolv, int stepnum, string foldername)
 }
 
 
+// print out the membrane Yin&Yang patches' state separately in their own spherical coordinates
+void printMembPatchesState_sfSph(const Membrane &memb, int stepnum, string foldername) {
+    printMembPatchState_sph(*(memb.YinPart()), ture, stepnum, foldername); // Yin part
+    printMembPatchState_sph(*(memb.YangPart()), false, stepnum, foldername); // Yang part
+}
+
 
 // print out the membrane Yin/Yang patch state in its own spherical coordinates
-void printMembPatchState_sph(const vector<vector<double> > &psi, const NormalGrids2D &grids, bool isYinPatch, int stepnum, string foldername) {
+void printMembPatchState_sph(const MembranePatch &membPatch, bool isYinPatch, int stepnum, string foldername) {
     ostringstream oss;
 	oss << foldername << "/memb_" << (isYinPatch ? "Yin" : "Yang") << "_psi_" << stepnum << ".dat";
 	
@@ -97,15 +103,15 @@ void printMembPatchState_sph(const vector<vector<double> > &psi, const NormalGri
 	
 	//output data
 	fprintf(fp_psi, "VARIABLES = phi, r, theta, psi\n");
-	fprintf(fp_psi, "ZONE I = %d, J = %d, K = %d\n", (int)psi[0].size(), 1, (int)psi.size());
+	fprintf(fp_psi, "ZONE I = %d, J = %d, K = %d\n", (int)membPatch.psi[0].size(), 1, (int)membPatch.psi.size());
     
     // print out the result
-	double radius = grids.rad();
-	for (int i = 0; i < psi.size(); i++) {
-        double theta = grids.theta(i);
-        for (int j = 0; j < psi[0].size(); j++) {
-            double phi = grids.phi(j);
-            fprintf(fp_psi, "%lf %lf %lf %lf\n", phi, radius, theta, psi[i][j]);
+	double radius = membPatch.grids2D->rad();
+	for (int i = 0; i < membPatch.psi.size(); i++) {
+        double theta = membPatch.grids2D->theta(i);
+        for (int j = 0; j < membPatch.psi[0].size(); j++) {
+            double phi = membPatch.grids2D->phi(j);
+            fprintf(fp_psi, "%lf %lf %lf %lf\n", phi, radius, theta, membPatch.psi[i][j]);
         }
     }
 	//close the file
