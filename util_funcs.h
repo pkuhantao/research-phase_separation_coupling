@@ -27,6 +27,10 @@ void printInSolvState_car(const InnerSolv &inSolv, int stepnum, string foldernam
 // and the center part's state in cartesian coordinates
 void printInSolvPatchesState_sfSph(const InnerSolv &inSolv, int stepnum, string foldername);
 
+// print out the inner solvent Yin&Yang patches' plus the center state separately in their own spherical coordinates
+// where the center state will be printed twice (Yin&Yang each)
+void printInSolvState_sfSph(const InnerSolv &inSolv, int stepnum, string foldername);
+
 // print out the analysis for the whole 3D inner solvent
 void printInSolvAnaly(const InnerSolv &inSolv, int stepnum, string foldername);
 
@@ -48,6 +52,10 @@ void printInsolvPatchState_sph(const InnerSolvPatch &inSolvPatch, bool isYinPatc
 
 // print out the inner solvent center part's state
 void printInsolvCtState(const Center &ct, int stepnum, string foldername);
+
+// print out the inner solvent Yin/Yang patch plus the center state in its own spherical coordinates
+void printInsolvPatchAndCtState_sph(const InnerSolvPatch &inSolvPatch, const Center &ct, bool isYinPatch, int stepnum, string foldername);
+
 
 // print out the membrane Yin/Yang patch state in its own spherical coordinates
 void printMembPatchState_sph(const MembranePatch &membPatch, bool isYinPatch, int stepnum, string foldername);
