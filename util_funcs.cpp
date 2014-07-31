@@ -195,7 +195,7 @@ void printInsolvPatchAndCtState_sph(const InnerSolvPatch &inSolvPatch, const Cen
         // for center
         for (int j = 0; j < n3; j++) {
             double phi = inSolvPatch.grids3D->phi(j);
-            fprintf(fp_psi, "%lf %lf %lf %lf\n", phi, 0.0, theta, ct.psiAtCenter());
+            fprintf(fp_psi, "%lf %lf %lf %lf\n", phi, 0.000001, theta, ct.psiAtCenter());
         }
         
         // for insolv patch
