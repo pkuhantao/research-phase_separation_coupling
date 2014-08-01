@@ -4,7 +4,7 @@ LFLAGS = -g -O3 #-fopenmp
 LIBS = -lm 
 
 ## basic objects
-BASIC_OBJS = NormalGrids2D.o NormalGrids3D.o GhostBC2D.o GhostFrame2D.o GhostFrame3D.o Center.o InnerSolvPatch.o InnerSolv.o MembranePatch.o Membrane.o util_funcs.o
+BASIC_OBJS = NormalGrids2D.o NormalGrids3D.o GhostBC2D.o GhostFrame2D.o GhostFrame3D.o Center.o InnerSolvPatch.o MembranePatch.o InnerSolv.o Membrane.o util_funcs.o
 
 ## phase separation in inner solvent only, where chemical potential is calculated by double-well potential
 SOLV_PS = solv_PS
