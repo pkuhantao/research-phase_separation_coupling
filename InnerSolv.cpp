@@ -12,7 +12,6 @@
 #include "Properties.h"
 #include "Center.h"
 #include "InnerSolvPatch.h"
-#include "Membrane.h"
 #include "MembranePatch.h"
 
 #include <cassert>
@@ -90,10 +89,7 @@ void InnerSolv::calcMu_dw() {
 }
 
 // calculate mu from double well potential and the local coupling with the membrane
-void InnerSolv::calcMu_dw_cp(const Membrane &memb) {
-    // get the membrane Yin&Yang patches
-    const MembranePatch* memb_Yin = memb.YinPart();
-    const MembranePatch* memb_Yang = memb.YangPart();
+void InnerSolv::calcMu_dw_cp(const MembranePatch* memb_Yin, const MembranePatch* memb_Yang) {
     // calculate the chemical potential
     Yin->calcMu_dw_cp(*(memb_Yin->psi_pt()));
     Yang->calcMu_dw_cp(*(memb_Yang->psi_pt()));
