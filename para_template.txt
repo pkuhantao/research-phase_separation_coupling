@@ -1,16 +1,16 @@
-datafolder ./case0/data
+datafolder ./PS_data
 nthreads 6
 
 radius 10
 nR 5
 nTheta 10
 nPhi 30
-nt 8000001
+nt 600001
 t_start 0
-dt 0.001
+dt 0.0001
 
-numConfig 20
-numAnaly 20 
+numConfig 40
+numAnaly 40 
 
 M_s 1.0
 w_s 1.0
@@ -24,6 +24,7 @@ b_m 1.0
 thickness 1.0
 
 Lambda 0
+dPsi 2.0
 
 init_psi_s_file 
 ave_psi_s 0
