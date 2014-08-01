@@ -18,7 +18,7 @@ struct SolvProp {
     double a;
     double b;
     double Lambda; // coupling strength
-    double dPsi = 2.0; // dPsi = psi^+ - psi^-
+    double dPsi; // dPsi = psi^+ - psi^-
     
     // geometric properties
     double ro; // outer radius
@@ -36,7 +36,7 @@ struct MembProp {
     double a;
     double b;
     double Lambda; // coupling strength
-    double dPsi = 2.0; // dPsi = psi^+ - psi^-
+    double dPsi; // dPsi = psi^+ - psi^-
     
     // geometric properties
     double thickness; // thickness of the membrane
