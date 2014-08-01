@@ -39,7 +39,7 @@ public:
     void initPsiSprSfGd(double x0, double y0, double z0, double radius, double inVal, double otVal); // initialize psi=inVal in sphere with given radius and center(x, y, z) in self grid, psi=otVal outside
     void initPsiSprOpGd(double xp0, double yp0, double zp0, double radius, double inVal, double otVal); // initialize psi=inVal in sphere with given radius and center(xp, yp, zp) in opposite grid, psi=otVal outside
     
-    const vector<vector<double> >* psi_at_R_pt() {return &psi[(int)psi.size()-1];}; // return the pointer of psi at r=R
+    const vector<vector<double> >* psi_at_R_pt() const {return &psi[(int)psi.size()-1];}; // return the pointer of psi at r=R
 
     
     vector<vector<vector<double> > > psi; // psi in the bulk

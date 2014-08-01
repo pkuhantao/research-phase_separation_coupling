@@ -37,7 +37,7 @@ public:
     void initPsiDiskSfGd(double x0, double y0, double z0, double radius, double inVal, double otVal); // initialize psi=inVal within sphere with given radius and center(x, y, z) in self grid, psi=otVal outside, effectively form a disk on the membrane
     void initPsiDiskOpGd(double xp0, double yp0, double zp0, double radius, double inVal, double otVal); // initialize psi=inVal within sphere with given radius and center(xp, yp, zp) in opposite grid, psi=otVal outside, effectively form a disk on the membrane
 
-    const vector<vector<double> >* psi_pt() {return &psi;}; // return psi's pointer
+    const vector<vector<double> >* psi_pt() const {return &psi;}; // return psi's pointer
     
     vector<vector<double> > psi; // psi in the bulk
     vector<vector<double> > mu; // mu in the bulk
