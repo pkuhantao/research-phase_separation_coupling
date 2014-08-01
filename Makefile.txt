@@ -22,13 +22,18 @@ MEMB_PS_OBJS = memb_PS.o
 MEMB_SD = memb_SD 
 MEMB_SD_OBJS = memb_SD.o
 
+## coupled phase separation in both membrane and inner solvent, where chemical potential is calculated by double-well potential with local coupling effect
+CPL_PS = cpl_PS
+CPL_PS_OBJS = cpl_PS.o 
 
-all: solv_ps solv_sd memb_ps memb_sd
+
+all: solv_ps solv_sd memb_ps memb_sd cpl_ps
 
 solv_ps: $(SOLV_PS) 
 solv_sd: $(SOLV_SD)
 memb_ps: $(MEMB_PS)
 memb_sd: $(MEMB_SD)
+cpl_ps: $(CPL_PS)
 
 
 $(SOLV_PS): $(BASIC_OBJS) $(SOLV_PS_OBJS) 
@@ -55,6 +60,12 @@ $(MEMB_SD_OBJS):
 	$(CXX) $(CXXFLAGS) -c $(MEMB_SD_OBJS:.o=.cpp)
 
 
+$(CPL_PS): $(BASIC_OBJS) $(CPL_PS_OBJS) 
+	$(CXX) $(LFLAGS) -o $@ $^ $(LIBS)
+$(CPL_PS_OBJS): 
+	$(CXX) $(CXXFLAGS) -c $(CPL_PS_OBJS:.o=.cpp)
+
+
 $(BASIC_OBJS):
 	$(CXX) $(CXXFLAGS) -c $(BASIC_OBJS:.o=.cpp)
 
@@ -66,7 +77,7 @@ clean:
 cleanAll:
 	$(RM) *.o *~
 	$(RM) .depend
-	$(RM) $(SOLV_PS) $(SOLV_SD) $(MEMB_PS) $(MEMB_SD)
+	$(RM) $(SOLV_PS) $(SOLV_SD) $(MEMB_PS) $(MEMB_SD) $(CPL_PS)
 
 depend:
 	$(CXX) -MM $(CXXFLAGS) *.cpp > .depend
