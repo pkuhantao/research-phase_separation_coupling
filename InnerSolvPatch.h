@@ -30,6 +30,7 @@ public:
     void interpMu(const vector<vector<vector<double> > > &oppMu, const double muCt); // given mu in opposite grids and at the center, interpolate the ghost cells for mu in current grids
     
     void calcMu_dw(); // calculate mu from double well potential
+    void calcMu_dw_cp(const vector<vector<double> > &psi_m); // calculate mu from double well potential and local coupling with membrane (psi_m is the membrane order parameter)
     void calcMu_sd(); // calculate mu from simple diffusion model, where mu=psi
     void updatePsi(); // update psi from mu
     
@@ -38,6 +39,8 @@ public:
     void initPsiSprSfGd(double x0, double y0, double z0, double radius, double inVal, double otVal); // initialize psi=inVal in sphere with given radius and center(x, y, z) in self grid, psi=otVal outside
     void initPsiSprOpGd(double xp0, double yp0, double zp0, double radius, double inVal, double otVal); // initialize psi=inVal in sphere with given radius and center(xp, yp, zp) in opposite grid, psi=otVal outside
     
+    const vector<vector<double> >* psi_at_R_pt() {return &psi[(int)psi.size()-1];}; // return the pointer of psi at r=R
+
     
     vector<vector<vector<double> > > psi; // psi in the bulk
     vector<vector<vector<double> > > mu; // mu in the bulk

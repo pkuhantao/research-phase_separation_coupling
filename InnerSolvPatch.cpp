@@ -88,6 +88,52 @@ void InnerSolvPatch::calcMu_dw() {
     }
 }
 
+// calculate mu from double well potential and local coupling with membrane (psi_m is the membrane order parameter)
+void InnerSolvPatch::calcMu_dw_cp(const vector<vector<double> > &psi_m) {
+    // dimensions
+    const int n1 = mu.size();
+    const int n2 = mu[0].size();
+    const int n3 = mu[0][0].size();
+    // steps
+    const double dR = grids3D->dRAD();
+    const double dTheta = grids3D->dTHETA();
+    const double dPhi = grids3D->dPHI();
+    
+    for (int k = 0; k < n1; k++) {
+        double r = grids3D->rad(k); // r_k
+        
+        for (int i = 0; i < n2; i++) {
+            double theta = grids3D->theta(i); // theta_i
+            double sin_theta = sin(theta); // sin(theta_i)
+            double tan_theta = tan(theta); // tan(theta_i)
+            
+            for (int j = 0; j < n3; j++) {
+                // calculate laplace
+                double r_lo = (k == 0) ? ghost3D_psi->f0_ib[i][j] : psi[k-1][i][j];
+                double r_hi = (k == (n1-1)) ? ghost3D_psi->f0_ob[i][j] : psi[k+1][i][j];
+                double the_lo = (i == 0) ? ghost3D_psi->f0_the_lo[k][j] : psi[k][i-1][j];
+                double the_hi = (i == (n2-1)) ? ghost3D_psi->f0_the_hi[k][j] : psi[k][i+1][j];
+                double phi_lo = (j == 0) ? ghost3D_psi->f0_phi_lo[k][i] : psi[k][i][j-1];
+                double phi_hi = (j == (n3-1)) ? ghost3D_psi->f0_phi_hi[k][i] : psi[k][i][j+1];
+                // in-plane derivative
+                double laplace = (the_hi+the_lo-2.0*psi[k][i][j])/(dTheta*dTheta) + (phi_hi+phi_lo-2.0*psi[k][i][j])/(sin_theta*sin_theta*dPhi*dPhi) + (the_hi-the_lo)/(2.0*tan_theta*dTheta);
+                laplace /= (r*r);
+                // out-of-plane derivative
+                laplace += (r_hi+r_lo-2.0*psi[k][i][j])/(dR*dR) + (r_hi-r_lo)/(r*dR);
+                
+                mu[k][i][j] = -(props.w*props.w/2.0)*laplace - props.a*psi[k][i][j] + props.b*psi[k][i][j]*psi[k][i][j]*psi[k][i][j];
+                
+                // consider the coupling effect if at r=R
+                if (k == (n1-1)) {
+                    double coeff = 2.0*props.Lambda/(props.dPsi*props.dPsi*dR);
+                    double coupling = coeff * (psi[k][i][j]-psi_m[i][j]);
+                    mu[k][i][j] += coupling;
+                }
+            }
+        }
+    }
+}
+
 // calculate mu in the bulk from simple diffusion model
 void InnerSolvPatch::calcMu_sd() {
     const int n1 = psi.size();

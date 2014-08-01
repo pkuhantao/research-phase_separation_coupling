@@ -75,6 +75,35 @@ void MembranePatch::calcMu_dw() {
     }
 }
 
+// calculate mu from double well potential and the local coupling with the inner solvent (psi_s is the inner solvent order parameter at r=R)
+void MembranePatch::calcMu_dw_cp(const vector<vector<double> > &psi_s) {
+    const double dTheta = grids2D->dTHETA(); // steps
+    const double dPhi = grids2D->dPHI();
+    const double r = grids2D->rad(); // radius
+    const int nrow = mu.size(); // dimension
+    const int ncol = mu[0].size();
+    
+    for (int i = 0; i < nrow; i++) {
+        double theta = grids2D->theta(i); // theta_i
+        double sin_theta = sin(theta); // sin(theta_i)
+        double tan_theta = tan(theta); // tan(theta_i)
+        
+        for (int j = 0; j < ncol; j++) {
+            // calculate laplace
+            double lt = (i == 0) ? ghost2D_psi->f0_the_lo_[j] : psi[i-1][j];
+            double rt = (i == (nrow-1)) ? ghost2D_psi->f0_the_hi_[j] : psi[i+1][j];
+            double dn = (j == 0) ? ghost2D_psi->f0_phi_lo_[i] : psi[i][j-1];
+            double up = (j == (ncol-1)) ? ghost2D_psi->f0_phi_hi_[i] : psi[i][j+1];
+            double laplace = (rt+lt-2.0*psi[i][j])/(dTheta*dTheta) + (up+dn-2.0*psi[i][j])/(sin_theta*sin_theta*dPhi*dPhi) + (rt-lt)/(2.0*tan_theta*dTheta);
+            laplace /= (r*r);
+            
+            double coupling = (2.0*props.Lambda/(props.dPsi*props.dPsi)) * (psi[i][j]-psi_s[i][j]);
+            
+            mu[i][j] = -0.5*props.w*props.w*laplace - props.a*psi[i][j] + props.b*pow(psi[i][j], 3) + coupling;
+        }
+    }
+}
+
 // calculate mu from simple diffusion model, where mu=psi
 void MembranePatch::calcMu_sd() {
     for (int i = 0; i < mu.size(); i++) {
