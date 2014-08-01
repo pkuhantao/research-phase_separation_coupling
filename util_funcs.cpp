@@ -14,6 +14,7 @@
 #include "MembranePatch.h"
 #include "NormalGrids2D.h"
 #include "NormalGrids3D.h"
+#include "Properties.h"
 
 
 #include <iostream>
@@ -24,10 +25,83 @@
 #include <cstdio>
 #include <algorithm>
 #include <cmath>
+#include <tr1/unordered_map>
+#include <fstream>
+#include <utility>
+
 
 #define PI 3.14159265
 
 using namespace std;
+
+// parse the input file into hashtable
+tr1::unordered_map<string, string> parseInputFile(char* filename) {
+    ifstream inputfile(filename); // input file
+	tr1::unordered_map<string, string> paras; // parameters' map
+    
+    // open the file
+	if (inputfile.is_open()) {
+		// obtain all parameters and their value, and store into the map
+		while (inputfile.good()) {
+			string oneline;  // one pair of parameter and its value
+			getline(inputfile, oneline); // get one line from the file
+			if (oneline.empty()) continue;
+			istringstream iss(oneline);
+			string key, val;
+			iss >> key >> val;
+			paras.insert(make_pair<string, string>(key, val)); // add new pair into map
+		}
+		inputfile.close(); // close the parameters file
+	}
+	else {
+		cerr << "Unable to open file" << endl;
+		exit(1);
+	}
+    
+    return paras;
+}
+
+
+// construct the solvent properties from the given hashtable
+SolvProp getInSolvProp(tr1::unordered_map<string, string> paras) {
+    // parameters for inner solvent
+    SolvProp solv_Props;
+    solv_Props.M = atof(paras["M_s"].c_str()); // solvent's mobility
+    solv_Props.w = atof(paras["w_s"].c_str()); // solvent's coefficients in phase field energy
+    solv_Props.a = atof(paras["a_s"].c_str());
+    solv_Props.b = atof(paras["b_s"].c_str());
+    solv_Props.Lambda = atof(paras["Lambda"].c_str()); // coupling strength
+    solv_Props.dPsi = atof(paras["dPsi"].c_str());  // dPsi = psi^+ - psi^-
+    
+    solv_Props.nR = atoi(paras["nR"].c_str());;  // space dimensions
+    solv_Props.nTheta = atoi(paras["nTheta"].c_str());
+    solv_Props.nPhi = atoi(paras["nPhi"].c_str());
+    
+    solv_Props.ro = atof(paras["radius"].c_str()); // outer radius
+    solv_Props.ri = solv_Props.ro/(double)(solv_Props.nR+1); // inner radius
+    
+    return solv_Props;
+}
+
+
+// construct the membrane properties from the given hashtable
+MembProp getMembProp(tr1::unordered_map<string, string> paras) {
+    // parameters for membrane
+    MembProp memb_Props;
+    memb_Props.M = atof(paras["M_m"].c_str()); // membrane's mobility
+    memb_Props.w = atof(paras["w_m"].c_str()); // membrane's coefficients in phase field energy
+    memb_Props.a = atof(paras["a_m"].c_str());
+    memb_Props.b = atof(paras["b_m"].c_str());
+    memb_Props.Lambda = atof(paras["Lambda"].c_str()); // coupling strength
+    memb_Props.dPsi = atof(paras["dPsi"].c_str());  // dPsi = psi^+ - psi^-
+    
+    memb_Props.thickness = atof(paras["thickness"].c_str()); // membrane thickness
+    memb_Props.radius = atof(paras["radius"].c_str());  // radius
+    memb_Props.nTheta = atoi(paras["nTheta"].c_str());
+    memb_Props.nPhi = atoi(paras["nPhi"].c_str());
+    
+    return memb_Props;
+}
 
 
 // print out the whole inner solvent state in cartesian coordinates (x, y, z) of Yin grids

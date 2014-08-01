@@ -12,13 +12,22 @@
 #include "InnerSolv.h"
 #include "Membrane.h"
 #include "NormalGrids2D.h"
+#include "Properties.h"
 
 #include <vector>
 #include <string>
+#include <tr1/unordered_map>
 
 using namespace std;
 
+// parse the input file into hashtable
+tr1::unordered_map<string, string> parseInputFile(char* filename);
 
+// construct the solvent properties from the given hashtable
+SolvProp getInSolvProp(tr1::unordered_map<string, string> paras);
+
+// construct the membrane properties from the given hashtable
+MembProp getMembProp(tr1::unordered_map<string, string> paras);
 
 // print out the whole inner solvent state in cartesian coordinates (x, y, z) of Yin grids
 void printInSolvState_car(const InnerSolv &inSolv, int stepnum, string foldername);
