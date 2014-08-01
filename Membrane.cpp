@@ -10,6 +10,8 @@
 #include "Properties.h"
 #include "NormalGrids2D.h"
 #include "MembranePatch.h"
+#include "InnerSolv.h"
+#include "InnerSolvPatch.h"
 
 #include <cassert>
 
@@ -67,6 +69,20 @@ void Membrane::calcMu_dw() {
     // after calculate the value in the bulk, we interpolate the value in ghost cells automatically
     interpMu();
 }
+
+// calculate mu from double well potential and the local coupling with the inner solvent
+void Membrane::calcMu_dw_cp(const InnerSolv &inSolv) {
+    // get inner solvent's Yin&Yang patches
+    const InnerSolvPatch* inSolv_Yin = inSolv.YinPart();
+    const InnerSolvPatch* inSolv_Yang = inSolv.YangPart();
+    // calculate mu from double well potential and the local coupling
+    Yin->calcMu_dw_cp(*(inSolv_Yin->psi_at_R_pt()));
+    Yang->calcMu_dw_cp(*(inSolv_Yang->psi_at_R_pt()));
+    // after calculate the value in the bulk, we interpolate the value in ghost cells automatically
+    interpMu();
+}
+
+
 
 // calculate mu from simple diffusion model, where mu=psi
 void Membrane::calcMu_sd() {

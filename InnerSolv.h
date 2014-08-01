@@ -17,6 +17,7 @@
 #include "Properties.h"
 #include "Center.h"
 #include "InnerSolvPatch.h"
+#include "Membrane.h"
 
 
 class InnerSolv {
@@ -29,6 +30,7 @@ public:
     void initPsiSprYinGd(double x0, double y0, double z0, double radius, double inVal, double otVal); // initialize psi=inVal within the sphere with given radius and center (x0, y0, z0) in Yin grid, otVal outside of sphere
     
     void calcMu_dw(); // calculate chemical potential by double-well potential
+    void calcMu_dw_cp(const Membrane &memb); // calculate mu from double well potential and the local coupling with the membrane
     void calcMu_sd(); // calculate chemical potential by simple diffusion model, where mu=psi
     void updatePsi();
     

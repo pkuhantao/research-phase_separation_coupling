@@ -14,6 +14,7 @@
 #include "Properties.h"
 #include "NormalGrids2D.h"
 #include "MembranePatch.h"
+#include "InnerSolv.h"
 
 using namespace std;
 
@@ -27,6 +28,7 @@ public:
     void initPsiDiskYinGd(double x0, double y0, double z0, double radius, double inVal, double otVal); // initialize psi=inVal within the sphere with given radius and center (x0, y0, z0) in Yin grid, otVal outside of sphere, effectively forms a disk on the membrane
     
     void calcMu_dw(); // calculate mu from double well potential
+    void calcMu_dw_cp(const InnerSolv &inSolv); // calculate mu from double well potential and the local coupling with the inner solvent
     void calcMu_sd(); // calculate mu from simple diffusion model, where mu=psi
     void updatePsi(); // update psi from mu
     
