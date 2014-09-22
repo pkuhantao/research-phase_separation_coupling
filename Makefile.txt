@@ -26,14 +26,18 @@ MEMB_SD_OBJS = memb_SD.o
 CPL_PS = cpl_PS
 CPL_PS_OBJS = cpl_PS.o 
 
+## coupled phase separation between homogeneous membrane and heterogeneous inner solvent, where chemical potential is calculated by double-well potential with local coupling effect
+CPL_PS_HM = cpl_PS_homo_memb
+CPL_PS_HM_OBJS = cpl_PS_homo_memb.o 
 
-all: solv_ps solv_sd memb_ps memb_sd cpl_ps
+all: solv_ps solv_sd memb_ps memb_sd cpl_ps cpl_ps_hm
 
 solv_ps: $(SOLV_PS) 
 solv_sd: $(SOLV_SD)
 memb_ps: $(MEMB_PS)
 memb_sd: $(MEMB_SD)
 cpl_ps: $(CPL_PS)
+cpl_ps_hm: $(CPL_PS_HM)
 
 
 $(SOLV_PS): $(BASIC_OBJS) $(SOLV_PS_OBJS) 
@@ -66,6 +70,12 @@ $(CPL_PS_OBJS):
 	$(CXX) $(CXXFLAGS) -c $(CPL_PS_OBJS:.o=.cpp)
 
 
+$(CPL_PS_HM): $(BASIC_OBJS) $(CPL_PS_HM_OBJS) 
+	$(CXX) $(LFLAGS) -o $@ $^ $(LIBS)
+$(CPL_PS_HM_OBJS): 
+	$(CXX) $(CXXFLAGS) -c $(CPL_PS_HM_OBJS:.o=.cpp)
+
+
 $(BASIC_OBJS):
 	$(CXX) $(CXXFLAGS) -c $(BASIC_OBJS:.o=.cpp)
 
@@ -77,7 +87,7 @@ clean:
 cleanAll:
 	$(RM) *.o *~
 	$(RM) .depend
-	$(RM) $(SOLV_PS) $(SOLV_SD) $(MEMB_PS) $(MEMB_SD) $(CPL_PS)
+	$(RM) $(SOLV_PS) $(SOLV_SD) $(MEMB_PS) $(MEMB_SD) $(CPL_PS) $(CPL_PS_HM)
 
 depend:
 	$(CXX) -MM $(CXXFLAGS) *.cpp > .depend
