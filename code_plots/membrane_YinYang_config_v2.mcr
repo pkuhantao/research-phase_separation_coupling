@@ -1,0 +1,116 @@
+#!MC 1200
+# Created by Tecplot 360 build 12.0.0.3116
+
+$!VarSet |MFBD| = '/Users/than'
+
+$!VarSet |NUMCASE| = 4     ## number of cases
+$!VarSet |CASEINDEX| = 0     ## case index
+
+$!LOOP |NUMCASE|
+
+$!VarSet |Folder| = '/Desktop/research_data/simulation_cps/Yin_Yang_grids/Sep_20_2014/cps/hete_mismatch/phi_s_zero_psi_m_nonzero/case|CASEINDEX|'
+$!VarSet |Datafolder| = '/CPS_data'
+$!VarSet |Picsfolder| = '/CPS_pics'
+$!VarSet |NUM| = 78     ## number of configuration
+$!VarSet |STEP| = 200000  ## time step
+$!VarSet |Index| = 0  ## current time index
+
+
+## loop through all configurations
+
+$!LOOP |NUM|
+
+## Yang part
+
+$!READDATASET  '"|MFBD||Folder||Datafolder|/memb_Yang_psi_|Index|.dat" '
+  READDATAOPTION = NEW
+  RESETSTYLE = YES
+  INCLUDETEXT = NO
+  INCLUDEGEOM = NO
+  INCLUDECUSTOMLABELS = NO
+  VARLOADMODE = BYNAME
+  ASSIGNSTRANDIDS = YES
+  INITIALPLOTTYPE = CARTESIAN3D
+  VARNAMELIST = '"phi" "r" "theta" "psi"'
+$!TRANSFORMCOORDINATES 
+  TRANSFORMATION = SPHERICALTORECT
+  ANGLESPEC = RADIANS
+  CREATENEWVARIABLES = NO
+  THETAVAR = 1
+  RVAR = 2
+  XVAR = 1
+  YVAR = 2
+  PSIVAR = 3
+  ZVAR = 3
+$!ALTERDATA 
+  EQUATION = '{X} = -{phi}'
+$!ALTERDATA 
+  EQUATION = '{Y} = {theta}'
+$!ALTERDATA 
+  EQUATION = '{Z} = {r}'
+$!ALTERDATA 
+  EQUATION = '{psi\'} = {psi}'
+$!DELETEVARS  [1-4]
+$!GLOBALCONTOUR 1  VAR = 4
+$!CONTOURLEVELS RESETTONICE
+  CONTOURGROUP = 1
+  APPROXNUMVALUES = 15
+$!FIELDLAYERS SHOWCONTOUR = YES
+$!FIELDLAYERS USETRANSLUCENCY = NO
+$!FIELDLAYERS SHOWEDGE = NO
+
+$!GLOBALCONTOUR 1  COLORMAPFILTER{COLORMAPDISTRIBUTION = CONTINUOUS}
+
+$!GLOBALCONTOUR 1  COLORMAPFILTER{CONTINUOUSCOLOR{CMIN = -1}}
+$!GLOBALCONTOUR 1  COLORMAPFILTER{CONTINUOUSCOLOR{CMAX = 1}}
+
+## Yin part
+
+$!READDATASET  '"|MFBD||Folder||Datafolder|/memb_Yin_psi_|Index|.dat" '
+  READDATAOPTION = APPEND
+  RESETSTYLE = NO
+  INCLUDETEXT = NO
+  INCLUDEGEOM = NO
+  INCLUDECUSTOMLABELS = NO
+  VARLOADMODE = BYNAME
+  ASSIGNSTRANDIDS = YES
+  INITIALPLOTTYPE = CARTESIAN3D
+  VARNAMELIST = '"X" "Y" "Z" "psi\'" "phi" "r" "theta" "psi"'
+$!TRANSFORMCOORDINATES 
+  TRANSFORMATION = SPHERICALTORECT
+  ANGLESPEC = RADIANS
+  CREATENEWVARIABLES = NO
+  THETAVAR = 5
+  RVAR = 6
+  XVAR = 1
+  YVAR = 2
+  PSIVAR = 7
+  ZVAR = 3
+  ZONELIST =  [2]
+$!ALTERDATA  [2]
+  EQUATION = '{psi\'} = {psi}'
+$!DELETEVARS  [5-8]
+
+$!REDRAWALL 
+
+## Export the picture
+
+$!EXPORTSETUP EXPORTFORMAT = PNG
+$!EXPORTSETUP IMAGEWIDTH = 756
+$!EXPORTSETUP EXPORTFNAME = '|MFBD||Folder||Picsfolder|/memb_YinYang_psi_|Index|.png'
+$!EXPORT 
+  EXPORTREGION = CURRENTFRAME
+
+$!VARSET |Index| += |STEP|
+
+
+$!ENDLOOP
+
+
+
+
+$!VARSET |CASEINDEX| += 1
+
+$!ENDLOOP
+
+$!RemoveVar |MFBD|
